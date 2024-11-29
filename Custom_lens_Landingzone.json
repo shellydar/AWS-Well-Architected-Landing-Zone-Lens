@@ -1,0 +1,763 @@
+{
+    "schemaVersion": "2021-11-01",
+    "name": "Landing Zone lens",
+    "description": "This lens focuses on best practices for designing, implementing, and managing AWS Landing Zones. It addresses key considerations specific to multi-account environments, account lifecycle management, and organizational governance in the context of Landing Zones",
+    "pillars": [
+        {
+            "id": "operational",
+            "name": "Operational Excellence",
+            "questions": [
+                {
+                    "id": "operational_q1",
+                    "title": "How do you implement centralized logging across your Landing Zone?",
+                    "description": "Centralized logging is crucial for maintaining visibility and compliance across a multi-account environment. This question addresses how you collect, store, and manage logs from all accounts within your Landing Zone.",
+                    "choices": [
+                        {
+                            "id": "log_archive_account",
+                            "title": "Route all logs to a dedicated log archive account",
+                            "helpfulResource": {
+                                "displayText": "Learn about centralized logging in AWS using CloudWatch Logs and S3",
+                                "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CrossAccountSubs.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Set up a centralized log archive account and configure log routing from all accounts in your organization to this central repository. Use AWS CloudWatch Logs, S3, and Kinesis Data Firehose to implement this logging pipeline."
+                            }
+                        },
+                        {
+                            "id": "log_retention_policy",
+                            "title": "Implement appropriate log retention and lifecycle policies",
+                            "helpfulResource": {
+                                "displayText": "Explore S3 Lifecycle configuration for cost-effective log management",
+                                "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Define and implement log retention policies that balance compliance requirements with cost considerations. Use S3 Lifecycle policies to automatically transition logs to cheaper storage classes or delete them after a specified period."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "log_archive_account && log_retention_policy",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "log_archive_account && !log_retention_policy",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "operational_q2",
+                    "title": "How do you manage observability baselines for different Organizational Units (OUs)?",
+                    "description": "Different parts of your organization may have varying observability requirements. This question addresses how you define and implement appropriate observability baselines for different OUs within your Landing Zone.",
+                    "choices": [
+                        {
+                            "id": "ou_specific_baselines",
+                            "title": "Define OU-specific observability baselines",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Observability best practices",
+                                "url": "https://aws.amazon.com/products/management-and-governance/use-cases/monitoring-and-observability/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Establish distinct observability baselines for each OU, tailoring the level of monitoring (basic or advanced) based on the OU's specific requirements. Document these baselines and review them regularly."
+                            }
+                        },
+                        {
+                            "id": "automated_baseline_deployment",
+                            "title": "Automate the deployment of observability baselines",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS CloudFormation StackSets",
+                                "url": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/what-is-cfnstacksets.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AWS CloudFormation StackSets to automatically deploy and manage observability baselines across accounts within each OU. This ensures consistency and reduces manual effort in maintaining observability configurations."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "ou_specific_baselines && automated_baseline_deployment",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "ou_specific_baselines && !automated_baseline_deployment",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "operational_q3",
+                    "title": "How do you aggregate and visualize metrics across your entire organization?",
+                    "description": "A centralized view of metrics is essential for understanding the overall health and performance of your Landing Zone. This question addresses how you collect and visualize metrics from all accounts in a centralized dashboard.",
+                    "choices": [
+                        {
+                            "id": "centralized_dashboard",
+                            "title": "Implement a centralized organizational dashboard",
+                            "helpfulResource": {
+                                "displayText": "Learn about cross-account, cross-region dashboards in CloudWatch",
+                                "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Cross-Account-Cross-Region.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create a centralized CloudWatch dashboard that aggregates key metrics from all accounts and regions. Use AWS Organizations and CloudWatch cross-account observability to streamline this process."
+                            }
+                        },
+                        {
+                            "id": "automated_metric_collection",
+                            "title": "Automate the collection and aggregation of metrics",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS CloudWatch Metrics Insights",
+                                "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/query_with_cloudwatch-metrics-insights.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement automated processes to collect and aggregate metrics from all accounts. Use CloudWatch Metrics Insights for powerful querying capabilities across your entire organization."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "centralized_dashboard && automated_metric_collection",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "centralized_dashboard && !automated_metric_collection",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "security",
+            "name": "Security",
+            "questions": [
+                {
+                    "id": "security_q1",
+                    "title": "How do you implement a centralized IAM Identity Center?",
+                    "description": "A centralized IAM Identity Center (IdC) instance is essential for managing user access across your Landing Zone. This question addresses how you implement and manage a centralized IdC instance across all accounts in your Landing Zone.",
+                    "choices": [
+                        {
+                            "id": "idc_instance",
+                            "title": "Implement a centralized IdC instance",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS IAM Identity Center",
+                                "url": "https://docs.aws.amazon.com/singlesignon/latest/userguide/what-is.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Set up a centralized IdC instance in your management account and configure AWS IAM Identity Center to manage user access across all accounts in your organization. Use AWS Organizations integration to streamline this process."
+                            }
+                        },
+                        {
+                            "id": "idc_automation",
+                            "title": "Automate IdC permission set and account assignment management",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS CloudFormation for IAM Identity Center",
+                                "url": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sso-permissionset.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AWS CloudFormation or AWS CDK to automate the creation and management of permission sets and account assignments in IAM Identity Center. This ensures consistency and reduces manual effort in maintaining IdC configurations across your organization."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "idc_instance && idc_automation",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "idc_instance && !idc_automation",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "security_q2",
+                    "title": "How do you implement centralized compliance management?",
+                    "description": "Centralized compliance management is essential for maintaining consistent compliance standards across your Landing Zone. This question addresses how you implement and manage compliance across all accounts in your Landing Zone.",
+                    "choices": [
+                        {
+                            "id": "compliance_team",
+                            "title": "Establish a centralized compliance team with defined processes",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Audit Manager",
+                                "url": "https://docs.aws.amazon.com/audit-manager/latest/userguide/what-is.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Establish a centralized compliance team with clearly defined roles and responsibilities. Implement AWS Audit Manager to continuously audit your AWS usage and prepare for assessments. Develop standardized processes for compliance monitoring, reporting, and remediation across all accounts."
+                            }
+                        },
+                        {
+                            "id": "compliance_automation",
+                            "title": "Automate compliance monitoring and reporting",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Config and AWS Security Hub",
+                                "url": "https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-standards.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement AWS Config to assess, audit, and evaluate the configurations of your AWS resources. Use AWS Security Hub to automate security checks and centralize security alerts. Leverage AWS CloudFormation StackSets or AWS Control Tower to consistently deploy these services and custom rules across all accounts in your organization."
+                            }
+                        },
+                        {
+                            "id": "compliance_integration",
+                            "title": "Integrate compliance into CI/CD pipelines",
+                            "helpfulResource": {
+                                "displayText": "Learn about DevSecOps on AWS",
+                                "url": "https://aws.amazon.com/blogs/devops/implementing-devsecops-using-aws-codepipeline/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Integrate compliance checks into your CI/CD pipelines using tools like AWS CodePipeline and AWS Config rules. Implement policy-as-code using tools like AWS CloudFormation Guard or Open Policy Agent to ensure that all deployed resources meet compliance standards before they reach production."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "compliance_team && compliance_automation && compliance_integration",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "compliance_team && !compliance_automation",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "security_q3",
+                    "title": "How do you manage compliance standards across your Landing Zone?",
+                    "description": "Compliance is a critical aspect of many organizations' IT governance. This question addresses how you implement, manage, and enforce compliance standards across your Landing Zone, ensuring that different accounts meet their specific compliance requirements.",
+                    "choices": [
+                        {
+                            "id": "compliance_classification",
+                            "title": "Classify accounts based on compliance requirements",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Config for compliance management",
+                                "url": "https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement a tagging strategy to classify accounts based on their compliance requirements. Use these tags to drive automated compliance checks and service restrictions."
+                            }
+                        },
+                        {
+                            "id": "compliance_controls",
+                            "title": "Implement compliance controls in the Landing Zone",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Control Tower for governance and compliance",
+                                "url": "https://aws.amazon.com/controltower/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AWS Control Tower or custom solutions to implement baseline compliance controls across your Landing Zone. Regularly review and update these controls to ensure they meet evolving compliance requirements."
+                            }
+                        },
+                        {
+                            "id": "service_restrictions",
+                            "title": "Enforce service restrictions based on compliance standards",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Organizations Service Control Policies",
+                                "url": "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement Service Control Policies (SCPs) that deny access to specific AWS services based on an account's compliance classification. Regularly review and update these policies to ensure they align with current compliance requirements and organizational needs."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "compliance_classification && compliance_controls && service_restrictions",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "compliance_classification && !compliance_controls",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "!compliance_classification",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "security_q4",
+                    "title": "How do you manage data classification across your Landing Zone?",
+                    "description": "Proper data classification is crucial for maintaining security, compliance, and appropriate access controls. This question addresses how you identify, categorize, and manage different types of data across your Landing Zone accounts.",
+                    "choices": [
+                        {
+                            "id": "data_classification_schema",
+                            "title": "Implement a data classification schema",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS data classification best practices",
+                                "url": "https://aws.amazon.com/blogs/security/data-classification-techniques-using-aws/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Develop and implement a clear data classification schema that includes categories such as PII, Customer Data, Intellectual Property (IP), and Non-Classified Data. Document this schema and ensure it's communicated across the organization."
+                            }
+                        },
+                        {
+                            "id": "account_classification",
+                            "title": "Classify accounts based on data sensitivity",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Organizations and account management",
+                                "url": "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement a tagging strategy to classify accounts based on the most sensitive data they contain (e.g., PII, Customer Data, IP, Non-Classified). Use these tags to drive automated security controls and access policies."
+                            }
+                        },
+                        {
+                            "id": "data_handling_policies",
+                            "title": "Enforce data handling policies based on classification",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Identity and Access Management (IAM)",
+                                "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Develop and implement IAM policies and Service Control Policies (SCPs) that enforce appropriate data handling practices based on account classification. This should include access restrictions, encryption requirements, and data transfer policies."
+                            }
+                        },
+                        {
+                            "id": "data_discovery",
+                            "title": "Implement automated data discovery and classification",
+                            "helpfulResource": {
+                                "displayText": "Explore Amazon Macie for data discovery and classification",
+                                "url": "https://aws.amazon.com/macie/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement automated data discovery and classification tools like Amazon Macie across your accounts. Regularly scan for sensitive data to ensure it's properly classified and protected, and to identify any misplaced sensitive information."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "data_classification_schema && account_classification && data_handling_policies && data_discovery",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "data_classification_schema && account_classification && data_handling_policies && !data_discovery",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "security_q5",
+                    "title": "How do you implement and maintain automated incident response across your Landing Zone?",
+                    "description": "Automated incident response is crucial for maintaining the security and operational integrity of your Landing Zone. This question addresses how you implement and automatically deploy incident response mechanisms across all accounts, including newly created ones.",
+                    "choices": [
+                        {
+                            "id": "centralized_ir_setup",
+                            "title": "Establish a centralized incident response setup",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Systems Manager Incident Manager",
+                                "url": "https://docs.aws.amazon.com/incident-manager/latest/userguide/what-is-incident-manager.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement AWS Systems Manager Incident Manager in a centralized security account. Configure it to integrate with AWS Security Hub and other security services across your organization."
+                            }
+                        },
+                        {
+                            "id": "automated_ir_deployment",
+                            "title": "Automate incident response deployment to new accounts",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS CloudFormation StackSets",
+                                "url": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/what-is-cfnstacksets.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AWS CloudFormation StackSets or AWS Control Tower Customizations to automatically deploy incident response configurations, including necessary IAM roles and AWS Config rules, to all new accounts upon creation."
+                            }
+                        },
+                        {
+                            "id": "ir_playbooks",
+                            "title": "Develop and maintain incident response playbooks",
+                            "helpfulResource": {
+                                "displayText": "Learn about Incident Manager response plans",
+                                "url": "https://docs.aws.amazon.com/incident-manager/latest/userguide/response-plans.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create standardized incident response playbooks using Incident Manager response plans. Ensure these playbooks are automatically associated with new accounts and regularly updated to address evolving threats."
+                            }
+                        },
+                        {
+                            "id": "ir_testing",
+                            "title": "Regularly test and refine incident response procedures",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Fault Injection Simulator",
+                                "url": "https://docs.aws.amazon.com/fis/latest/userguide/what-is.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement a regular testing schedule using AWS Fault Injection Simulator to simulate incidents and validate your automated response procedures. Use insights from these tests to continuously improve your incident response capabilities."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "centralized_ir_setup && automated_ir_deployment && ir_playbooks && ir_testing",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(centralized_ir_setup && automated_ir_deployment && ir_playbooks && !ir_testing) || (centralized_ir_setup && automated_ir_deployment && !ir_playbooks)",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "security_q6",
+                    "title": "How do you manage emergency access across your Landing Zone?",
+                    "description": "Emergency access mechanisms, such as break glass accounts, are essential for maintaining operational continuity in critical situations. This question addresses how you implement and manage emergency access across all accounts in your Landing Zone, including newly created ones.",
+                    "choices": [
+                        {
+                            "id": "break_glass_account",
+                            "title": "Establish a dedicated break glass account",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS account best practices",
+                                "url": "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_best-practices_mgmt-acct.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create a dedicated break glass account with highly privileged, emergency-use-only credentials. Implement strict security controls and monitoring on this account."
+                            }
+                        },
+                        {
+                            "id": "automated_access",
+                            "title": "Automate emergency access to new accounts",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Organizations APIs",
+                                "url": "https://docs.aws.amazon.com/organizations/latest/APIReference/Welcome.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement an automated process using AWS Lambda and AWS Organizations APIs to ensure the break glass account automatically gains necessary access to any newly created account in the Landing Zone."
+                            }
+                        },
+                        {
+                            "id": "access_review",
+                            "title": "Implement regular access reviews for emergency credentials",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS IAM Access Analyzer",
+                                "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/what-is-access-analyzer.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AWS IAM Access Analyzer to regularly review and audit access patterns of the break glass account. Implement automated processes to revoke unnecessary permissions and ensure the principle of least privilege is maintained."
+                            }
+                        },
+                        {
+                            "id": "emergency_process",
+                            "title": "Establish and maintain emergency access processes",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Secrets Manager",
+                                "url": "https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Develop clear processes for using emergency access, including approval workflows and post-incident reviews. Store emergency credentials securely using AWS Secrets Manager with strict access controls and rotation policies."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "break_glass_account && automated_access && access_review && emergency_process",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "break_glass_account && automated_access && ((access_review || emergency_process) || (!access_review && !emergency_process))",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "break_glass_account && !automated_access || !break_glass_account",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "cost",
+            "name": "Cost Optimization",
+            "questions": [
+                {
+                    "id": "cost_q1",
+                    "title": "How do you monitor and manage costs across your AWS organization?",
+                    "description": "Effective cost monitoring and management are crucial for maintaining financial control over your AWS environment. This question addresses how you implement cost visibility and management tools across your organization, ensuring that stakeholders at every level have access to relevant cost information.",
+                    "choices": [
+                        {
+                            "id": "cost_dashboard",
+                            "title": "Implement a comprehensive cost dashboard",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Cost Explorer and CUDOS",
+                                "url": "https://aws.amazon.com/aws-cost-management/aws-cost-explorer/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement a centralized cost dashboard using tools like AWS Cost Explorer or CUDOS (Cost and Usage Data Open Source). Ensure the dashboard provides detailed breakdowns of costs by account, service, and tag, allowing for granular analysis."
+                            }
+                        },
+                        {
+                            "id": "org_structure_alignment",
+                            "title": "Align cost reporting with organizational structure",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Organizations and cost allocation tags",
+                                "url": "https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Configure your cost dashboard to reflect your AWS Organizations structure. Use cost allocation tags and account groupings to ensure that costs are associated with the correct organizational units, allowing stakeholders to view costs for the accounts they're responsible for."
+                            }
+                        },
+                        {
+                            "id": "role_based_access",
+                            "title": "Implement role-based access to cost data",
+                            "helpfulResource": {
+                                "displayText": "Learn about IAM policies for AWS Cost Management",
+                                "url": "https://docs.aws.amazon.com/cost-management/latest/userguide/billing-permissions-ref.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Set up IAM roles and policies to provide appropriate access to cost data based on organizational hierarchy. Ensure that users can only view cost information for the accounts and resources they are responsible for."
+                            }
+                        },
+                        {
+                            "id": "automated_reporting",
+                            "title": "Set up automated cost reporting and alerting",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Budgets",
+                                "url": "https://aws.amazon.com/aws-cost-management/aws-budgets/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement AWS Budgets to set up cost thresholds and automated alerts. Configure regular cost reports to be sent to relevant stakeholders, providing ongoing visibility into spending patterns and potential cost anomalies."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "cost_dashboard && org_structure_alignment && role_based_access && automated_reporting",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "cost_dashboard && org_structure_alignment && ((!role_based_access) || (role_based_access && !automated_reporting))",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "!cost_dashboard || !org_structure_alignment",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "cost_q2",
+                    "title": "How do you manage costs and lifecycles for sandbox environments in your Landing Zone?",
+                    "description": "Sandbox environments are crucial for innovation and testing, but they can also lead to unexpected costs if not properly managed. This question addresses how you implement, control, and govern sandbox accounts within your Landing Zone to balance innovation with cost management.",
+                    "choices": [
+                        {
+                            "id": "sandbox_ou",
+                            "title": "Implement a dedicated Sandbox Organizational Unit (OU)",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Organizations and OUs",
+                                "url": "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_ous.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create a dedicated Sandbox OU within your AWS Organization. Apply specific policies and guardrails to this OU to ensure appropriate governance of sandbox environments."
+                            }
+                        },
+                        {
+                            "id": "automated_budgets",
+                            "title": "Implement automated budgets for each sandbox account",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Budgets",
+                                "url": "https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Develop an automated process to create and apply AWS Budgets to each new sandbox account. Set up alerts to notify account owners and administrators when spending approaches the budget limit."
+                            }
+                        },
+                        {
+                            "id": "time_limitation",
+                            "title": "Enforce time limitations on sandbox accounts",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Config Rules",
+                                "url": "https://docs.aws.amazon.com/config/latest/developerguide/evaluate-config.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement a mechanism to track the age of sandbox accounts, such as using tags and AWS Config Rules. Set a policy to review or automatically decommission sandbox accounts after a set period (e.g., 3 months)."
+                            }
+                        },
+                        {
+                            "id": "auto_deletion",
+                            "title": "Automatically delete accounts exceeding limits",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Lambda for automation",
+                                "url": "https://docs.aws.amazon.com/lambda/latest/dg/welcome.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Develop an automated process using AWS Lambda and Step Functions to monitor sandbox accounts for budget or time limit violations. Implement a workflow to automatically back up essential data and delete accounts that exceed these limits."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "sandbox_ou && automated_budgets && time_limitation && auto_deletion",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "sandbox_ou && automated_budgets && (time_limitation && !auto_deletion || !time_limitation)",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "sandbox_ou && !automated_budgets || !sandbox_ou",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                }, { "id": "cost_q3", "title": "How do you centrally manage the procurement and usage of third-party software across your AWS organization?", "description": "Effective management of third-party software procurement, licensing, and usage is crucial for cost control and compliance in a multi-account environment. This question addresses how you centralize and optimize the management of third-party software across your AWS organization.", "choices": [ { "id": "private_marketplace", "title": "Use AWS Private Marketplace for centralized software procurement", "helpfulResource": { "displayText": "Learn about AWS Marketplace Private Marketplace", "url": "https://docs.aws.amazon.com/marketplace/latest/buyerguide/private-marketplace.html" }, "improvementPlan": { "displayText": "Implement AWS Private Marketplace to create a curated list of approved third-party software products. Configure approval workflows to manage and control software purchases across your organization, ensuring compliance with procurement policies and budget constraints." } }, { "id": "license_manager", "title": "Implement AWS License Manager for license tracking", "helpfulResource": { "displayText": "Explore AWS License Manager", "url": "https://docs.aws.amazon.com/license-manager/latest/userguide/license-manager.html" }, "improvementPlan": { "displayText": "Deploy AWS License Manager to track and manage software licenses across your AWS organization. Set up license rules and automate license usage tracking to optimize costs and ensure compliance with licensing terms." } }, { "id": "systems_manager_inventory", "title": "Use AWS Systems Manager Inventory for software discovery", "helpfulResource": { "displayText": "Learn about AWS Systems Manager Inventory", "url": "https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-inventory.html" }, "improvementPlan": { "displayText": "Implement AWS Systems Manager Inventory across all accounts in your organization to automatically discover and track installed software on EC2 instances and on-premises servers. Use this data to identify unauthorized or underutilized software and optimize licensing costs." } }, { "id": "cost_optimization", "title": "Implement software cost optimization processes", "helpfulResource": { "displayText": "Explore AWS Cost Optimization", "url": "https://aws.amazon.com/aws-cost-management/aws-cost-optimization/" }, "improvementPlan": { "displayText": "Develop processes to regularly review software usage data from License Manager and Systems Manager Inventory. Use this information to optimize software licenses, remove unused software, and negotiate better terms with vendors based on actual usage patterns." } } ], "riskRules": [ { "condition": "private_marketplace && license_manager && systems_manager_inventory && cost_optimization", "risk": "NO_RISK" }, { "condition": "private_marketplace && license_manager && systems_manager_inventory && !cost_optimization", "risk": "LOW_RISK" }, { "condition": "private_marketplace && (license_manager || systems_manager_inventory) && !cost_optimization", "risk": "MEDIUM_RISK" }, { "condition": "private_marketplace && !license_manager && !systems_manager_inventory", "risk": "HIGH_RISK" }, { "condition": "default", "risk": "HIGH_RISK" } ] }
+            ]
+        },
+        {
+            "id": "performance",
+            "name": "performance",
+            "questions": [
+                {
+                    "id": "performance_q1",
+                    "title": "How have you designed your AWS Organization structure to optimize performance and resource management?",
+                    "description": "The structure of your AWS Organization can significantly impact the efficiency of resource deployment, policy management, and overall performance of your Landing Zone. This question addresses how you've organized your accounts to balance control, resource sharing, and operational efficiency.",
+                    "choices": [
+                        {
+                            "id": "control_based_grouping",
+                            "title": "Group accounts based on common controls",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Organizations and Service Control Policies",
+                                "url": "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Reorganize your AWS Organization structure to group accounts with similar control requirements into the same Organizational Units (OUs). This allows for more efficient application of Service Control Policies (SCPs) and simplifies governance."
+                            }
+                        },
+                        {
+                            "id": "resource_based_grouping",
+                            "title": "Group accounts based on common resources for mass deployment",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS CloudFormation StackSets",
+                                "url": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/what-is-cfnstacksets.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Restructure your AWS Organization to group accounts that share similar resource requirements. This facilitates efficient mass deployment of resources using tools like AWS CloudFormation StackSets or AWS Proton, improving performance and reducing management overhead."
+                            }
+                        },
+                        {
+                            "id": "hybrid_grouping",
+                            "title": "Implement a hybrid approach combining control and resource-based grouping",
+                            "helpfulResource": {
+                                "displayText": "Best practices for AWS Organizations",
+                                "url": "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_best-practices.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Design a multi-level OU structure that balances both control requirements and resource deployment needs. Use top-level OUs for broad control categories, and sub-OUs for resource-based groupings. This approach provides flexibility while maintaining efficient governance and resource management."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "hybrid_grouping",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "control_based_grouping || resource_based_grouping",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "performance_q2",
+                    "title": "How do you manage network connectivity for new accounts in your Landing Zone?",
+                    "description": "Efficient network design and connectivity are crucial for performance and security in a multi-account environment. This question addresses how you handle network connectivity for newly created accounts within your Landing Zone, ensuring appropriate isolation or integration as required.",
+                    "choices": [
+                        {
+                            "id": "selective_connectivity",
+                            "title": "Implement selective network connectivity based on account classification",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Transit Gateway",
+                                "url": "https://docs.aws.amazon.com/vpc/latest/tgw/what-is-transit-gateway.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Develop a classification system for accounts based on their connectivity requirements. Use AWS Organizations tags or custom metadata to identify accounts that need network connectivity. Implement AWS Transit Gateway or AWS Cloud WAN to connect only the identified accounts."
+                            }
+                        },
+                        {
+                            "id": "automated_connectivity",
+                            "title": "Automate network connectivity for identified accounts",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Network Manager",
+                                "url": "https://docs.aws.amazon.com/network-manager/latest/tgw/what-is-network-manager.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement an automated process using AWS Lambda and AWS Network Manager to detect newly created accounts that require connectivity (based on tags or metadata). Automatically attach these accounts to the appropriate Transit Gateway or Cloud WAN, and configure necessary route tables and security groups."
+                            }
+                        },
+                        {
+                            "id": "default_isolation",
+                            "title": "Maintain default network isolation for new accounts",
+                            "helpfulResource": {
+                                "displayText": "Learn about VPC best practices",
+                                "url": "https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-best-practices.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement a default policy of network isolation for all new accounts. Ensure that VPCs in new accounts are created without direct connectivity to other accounts or on-premises networks by default, requiring explicit action to enable connectivity."
+                            }
+                        },
+                        {
+                            "id": "network_monitoring",
+                            "title": "Implement comprehensive network monitoring and logging",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Network Firewall",
+                                "url": "https://docs.aws.amazon.com/network-firewall/latest/developerguide/what-is-aws-network-firewall.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Deploy AWS Network Firewall or third-party network monitoring tools to monitor traffic across account boundaries. Implement VPC Flow Logs and centralize logging to maintain visibility into network traffic patterns and potential security issues."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "selective_connectivity && automated_connectivity && default_isolation && network_monitoring",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "selective_connectivity && automated_connectivity && default_isolation && !network_monitoring",
+                            "risk": "LOW_RISK"
+                        },
+                        {
+                            "condition": "selective_connectivity && (automated_connectivity || default_isolation) && !network_monitoring",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "selective_connectivity && !automated_connectivity && !default_isolation",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
