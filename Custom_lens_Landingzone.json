@@ -16,11 +16,11 @@
                             "id": "log_archive_account",
                             "title": "Route all logs to a dedicated log archive account",
                             "helpfulResource": {
-                                "displayText": "Learn about centralized logging in AWS using CloudWatch Logs and S3",
-                                "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CrossAccountSubs.html"
+                                "displayText": "Learn about creating an organization trail with AWS CloudTrail",
+                                "url": "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/creating-trail-organization.html"
                             },
                             "improvementPlan": {
-                                "displayText": "Set up a centralized log archive account and configure log routing from all accounts in your organization to this central repository. Use AWS CloudWatch Logs, S3, and Kinesis Data Firehose to implement this logging pipeline."
+                                "displayText": "Set up a centralized log archive account and configure an AWS Organizations trail in CloudTrail to automatically deliver API activity logs from all member accounts to a central S3 bucket. Complement with VPC Flow Logs and AWS Config delivery channels routed to the same archive account."
                             }
                         },
                         {
@@ -33,15 +33,37 @@
                             "improvementPlan": {
                                 "displayText": "Define and implement log retention policies that balance compliance requirements with cost considerations. Use S3 Lifecycle policies to automatically transition logs to cheaper storage classes or delete them after a specified period."
                             }
+                        },
+                        {
+                            "id": "log_integrity_protection",
+                            "title": "Protect log integrity with immutability and access controls",
+                            "helpfulResource": {
+                                "displayText": "Learn about S3 Object Lock for immutable log storage",
+                                "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lock.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Enable S3 Object Lock in compliance mode on your log archive bucket to prevent log deletion or modification. Use SCPs to deny member accounts from disabling CloudTrail or CloudWatch log delivery. Enable S3 bucket versioning and server-side encryption (SSE-KMS) with a centrally managed key."
+                            }
+                        },
+                        {
+                            "id": "log_analysis_querying",
+                            "title": "Enable centralized log analysis and querying capabilities",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS CloudTrail Lake for centralized log querying",
+                                "url": "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-lake.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement centralized log analysis using AWS CloudTrail Lake, Amazon Athena, or Amazon OpenSearch Service to query CloudTrail logs across all accounts. Create saved queries and dashboards for common operational and security investigations to reduce mean time to resolution."
+                            }
                         }
                     ],
                     "riskRules": [
                         {
-                            "condition": "log_archive_account && log_retention_policy",
+                            "condition": "log_archive_account && log_retention_policy && log_integrity_protection && log_analysis_querying",
                             "risk": "NO_RISK"
                         },
                         {
-                            "condition": "log_archive_account && !log_retention_policy",
+                            "condition": "log_archive_account && log_retention_policy && (!log_integrity_protection || !log_analysis_querying)",
                             "risk": "MEDIUM_RISK"
                         },
                         {
@@ -76,15 +98,37 @@
                             "improvementPlan": {
                                 "displayText": "Use AWS CloudFormation StackSets to automatically deploy and manage observability baselines across accounts within each OU. This ensures consistency and reduces manual effort in maintaining observability configurations."
                             }
+                        },
+                        {
+                            "id": "observability_alerting",
+                            "title": "Implement centralized alerting with OU-aware routing",
+                            "helpfulResource": {
+                                "displayText": "Learn about Amazon CloudWatch cross-account alarms",
+                                "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Cross-Account-Cross-Region.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Configure centralized alerting that routes notifications based on OU ownership. Use Amazon SNS topics per OU or team, and integrate with incident management tools (e.g., PagerDuty, Incident Manager) so the right team is notified for their accounts."
+                            }
+                        },
+                        {
+                            "id": "observability_drift_detection",
+                            "title": "Detect and remediate observability baseline drift",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Config conformance packs",
+                                "url": "https://docs.aws.amazon.com/config/latest/developerguide/conformance-packs.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Deploy AWS Config rules or conformance packs to continuously verify that observability agents, CloudWatch alarms, and log configurations remain in place across all accounts. Implement auto-remediation to re-deploy baselines when drift is detected."
+                            }
                         }
                     ],
                     "riskRules": [
                         {
-                            "condition": "ou_specific_baselines && automated_baseline_deployment",
+                            "condition": "ou_specific_baselines && automated_baseline_deployment && observability_alerting && observability_drift_detection",
                             "risk": "NO_RISK"
                         },
                         {
-                            "condition": "ou_specific_baselines && !automated_baseline_deployment",
+                            "condition": "ou_specific_baselines && automated_baseline_deployment && (!observability_alerting || !observability_drift_detection)",
                             "risk": "MEDIUM_RISK"
                         },
                         {
@@ -119,15 +163,37 @@
                             "improvementPlan": {
                                 "displayText": "Implement automated processes to collect and aggregate metrics from all accounts. Use CloudWatch Metrics Insights for powerful querying capabilities across your entire organization."
                             }
+                        },
+                        {
+                            "id": "metric_anomaly_detection",
+                            "title": "Enable anomaly detection and automated alerting on organizational metrics",
+                            "helpfulResource": {
+                                "displayText": "Learn about CloudWatch Anomaly Detection",
+                                "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Anomaly_Detection.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Enable CloudWatch Anomaly Detection on key organizational metrics to automatically identify unusual patterns without manually setting static thresholds. Configure composite alarms that correlate anomalies across accounts and services to reduce alert noise and surface meaningful incidents."
+                            }
+                        },
+                        {
+                            "id": "metric_custom_namespaces",
+                            "title": "Standardize custom metric namespaces and dimensions across accounts",
+                            "helpfulResource": {
+                                "displayText": "Learn about CloudWatch custom metrics best practices",
+                                "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/publishingMetrics.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Define organization-wide standards for custom metric namespaces, dimension names, and units. Enforce these standards through shared libraries or CloudFormation templates so that metrics from different accounts can be meaningfully compared and aggregated in centralized dashboards."
+                            }
                         }
                     ],
                     "riskRules": [
                         {
-                            "condition": "centralized_dashboard && automated_metric_collection",
+                            "condition": "centralized_dashboard && automated_metric_collection && metric_anomaly_detection && metric_custom_namespaces",
                             "risk": "NO_RISK"
                         },
                         {
-                            "condition": "centralized_dashboard && !automated_metric_collection",
+                            "condition": "centralized_dashboard && automated_metric_collection && (!metric_anomaly_detection || !metric_custom_namespaces)",
                             "risk": "MEDIUM_RISK"
                         },
                         {
@@ -590,6 +656,201 @@
                             "risk": "HIGH_RISK"
                         }
                     ]
+                },
+                {
+                    "id": "operational_q11",
+                    "title": "What is your multi-account strategy for development lifecycle stages?",
+                    "description": "How you structure accounts and OUs for development lifecycle stages (dev, test, staging, production) directly impacts isolation, governance, and deployment practices. This question addresses whether each lifecycle stage has its own accounts and OUs, or whether environments are combined.",
+                    "choices": [
+                        {
+                            "id": "sdlc_single_account",
+                            "title": "All lifecycle stages share a single account",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS multi-account strategy",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/organizing-your-aws-environment/organizing-your-aws-environment.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Running all lifecycle stages in a single account increases blast radius and makes it difficult to enforce environment-specific controls. Plan a migration to separate accounts per lifecycle stage, grouped into environment-specific OUs, to improve isolation, security, and cost attribution."
+                            }
+                        },
+                        {
+                            "id": "sdlc_separate_accounts",
+                            "title": "Each lifecycle stage has its own account but within a shared OU",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Organizations OU design patterns",
+                                "url": "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_ous.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Separate accounts per stage is a good foundation. Consider organizing them into dedicated OUs per lifecycle stage (e.g., Workloads-Dev, Workloads-Staging, Workloads-Prod) to apply environment-specific SCPs, such as stricter controls on production and more permissive policies for development."
+                            }
+                        },
+                        {
+                            "id": "sdlc_separate_ous",
+                            "title": "Each lifecycle stage has dedicated accounts in environment-specific OUs with tailored SCPs",
+                            "helpfulResource": {
+                                "displayText": "Learn about recommended OU structure",
+                                "url": "https://docs.aws.amazon.com/whitepapers/latest/organizing-your-aws-environment/workloads-ou.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You have a mature structure with environment-specific OUs and tailored SCPs. Ensure that production OUs have the strictest controls (e.g., deny manual changes, enforce IaC-only deployments), while development OUs allow more flexibility for experimentation."
+                            }
+                        },
+                        {
+                            "id": "sdlc_automated_vending",
+                            "title": "Automate account vending with lifecycle stage assignment and environment-specific baselines",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Control Tower Account Factory",
+                                "url": "https://docs.aws.amazon.com/controltower/latest/userguide/account-factory.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Integrate lifecycle stage selection into your account vending process (e.g., Control Tower Account Factory or Account Factory for Terraform). Automatically place new accounts in the correct OU and apply environment-specific baselines including networking, security controls, and CI/CD pipeline configurations."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "sdlc_separate_ous && sdlc_automated_vending",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "sdlc_separate_accounts || (sdlc_separate_ous && !sdlc_automated_vending)",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "operational_q12",
+                    "title": "What is your process for creating new AWS accounts and how long does it take?",
+                    "description": "A well-defined, automated account creation process is critical for agility and governance in a multi-account environment. This question addresses how you provision new accounts, what baselines are applied, how the process integrates with your ITSM, and the time from request to a fully operational account.",
+                    "choices": [
+                        {
+                            "id": "account_manual_creation",
+                            "title": "Accounts are created manually through the AWS Console or CLI",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Control Tower Account Factory",
+                                "url": "https://docs.aws.amazon.com/controltower/latest/userguide/account-factory.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Manual account creation is error-prone and slow. Migrate to an automated account vending solution such as AWS Control Tower Account Factory, Account Factory for Terraform (AFT), or a custom solution using AWS Organizations APIs and Step Functions to standardize and accelerate account provisioning."
+                            }
+                        },
+                        {
+                            "id": "account_automated_vending",
+                            "title": "Accounts are provisioned through an automated vending pipeline with baselines",
+                            "helpfulResource": {
+                                "displayText": "Explore Account Factory for Terraform (AFT)",
+                                "url": "https://docs.aws.amazon.com/controltower/latest/userguide/aft-overview.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement an automated account vending pipeline that provisions accounts with all required baselines (networking, security services, IAM roles, tagging, alternate contacts) applied automatically. Use Control Tower Account Factory or AFT to ensure every new account is production-ready upon delivery."
+                            }
+                        },
+                        {
+                            "id": "account_itsm_integration",
+                            "title": "Integrate account creation with your ITSM platform via AWS Service Catalog connector",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Service Management Connector for ITSM",
+                                "url": "https://docs.aws.amazon.com/servicecatalog/latest/adminguide/integrations-servicenow.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Integrate your account vending process with your ITSM platform (e.g., ServiceNow, Jira Service Management) using the AWS Service Management Connector or custom API integrations. This allows teams to request new accounts through familiar ITSM workflows, with automatic approval routing, tracking, and audit trails."
+                            }
+                        },
+                        {
+                            "id": "account_sla_tracking",
+                            "title": "Track and optimize account delivery time with defined SLAs",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Step Functions for orchestration",
+                                "url": "https://docs.aws.amazon.com/step-functions/latest/dg/welcome.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Define SLAs for account delivery time (e.g., fully provisioned within 30 minutes) and track actual delivery times. Use AWS Step Functions to orchestrate the end-to-end provisioning workflow and CloudWatch metrics to monitor pipeline performance. Continuously optimize to reduce time from request to a fully operational account."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "account_automated_vending && account_itsm_integration && account_sla_tracking",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "account_automated_vending && !account_itsm_integration",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "operational_q13",
+                    "title": "What is your process for decommissioning and closing AWS accounts that are no longer needed?",
+                    "description": "Accounts that are no longer in use can become security risks and incur unnecessary costs if not properly decommissioned. This question addresses how you identify, clean up, and close unused accounts in your Landing Zone, ensuring data is preserved where required and resources are properly terminated.",
+                    "choices": [
+                        {
+                            "id": "decommission_process",
+                            "title": "Define a formal account decommissioning process with documented steps",
+                            "helpfulResource": {
+                                "displayText": "Learn about closing an AWS account",
+                                "url": "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_close.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Document a formal account decommissioning process that includes identifying the account owner, verifying no active workloads remain, backing up required data, removing the account from shared infrastructure (Transit Gateway, RAM shares), revoking IAM Identity Center access, and closing the account through AWS Organizations."
+                            }
+                        },
+                        {
+                            "id": "decommission_data_retention",
+                            "title": "Ensure data backup and compliance requirements are met before closure",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Backup for data preservation",
+                                "url": "https://docs.aws.amazon.com/aws-backup/latest/devguide/whatisbackup.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Before closing an account, verify that all data subject to retention requirements has been backed up or migrated to a central archive account. Use AWS Backup or S3 cross-account replication to preserve required data. Document what was retained and where for audit purposes."
+                            }
+                        },
+                        {
+                            "id": "decommission_automation",
+                            "title": "Automate account cleanup and resource termination before closure",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Nuke for account cleanup",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/automate-deletion-of-aws-resources-by-using-aws-nuke.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement automated cleanup processes using tools like aws-nuke or custom Lambda functions to terminate all resources in an account before closure. This prevents orphaned resources from incurring costs during the 90-day post-closure suspension period and ensures a clean decommission."
+                            }
+                        },
+                        {
+                            "id": "decommission_detection",
+                            "title": "Proactively identify unused or idle accounts for decommissioning",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Cost Anomaly Detection",
+                                "url": "https://docs.aws.amazon.com/cost-management/latest/userguide/manage-ad.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement automated detection of unused accounts by monitoring for low or zero spend, no active IAM sessions, and no API activity over an extended period. Use CloudTrail activity analysis and Cost Explorer to identify candidate accounts for decommissioning and notify account owners for review."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "decommission_process && decommission_data_retention && decommission_automation && decommission_detection",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "decommission_process && decommission_data_retention && !decommission_automation",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
                 }
             ]
         },
@@ -623,15 +884,37 @@
                             "improvementPlan": {
                                 "displayText": "Use AWS CloudFormation or AWS CDK to automate the creation and management of permission sets and account assignments in IAM Identity Center. This ensures consistency and reduces manual effort in maintaining IdC configurations across your organization."
                             }
+                        },
+                        {
+                            "id": "idc_least_privilege",
+                            "title": "Enforce least privilege through scoped permission sets and session policies",
+                            "helpfulResource": {
+                                "displayText": "Learn about IAM Identity Center permission sets",
+                                "url": "https://docs.aws.amazon.com/singlesignon/latest/userguide/permissionsetsconcept.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Design permission sets aligned with job functions using least privilege principles. Use customer-managed policies and permissions boundaries within permission sets. Limit session duration to the minimum required and implement attribute-based access control (ABAC) where possible to reduce the number of permission sets needed."
+                            }
+                        },
+                        {
+                            "id": "idc_access_reviews",
+                            "title": "Implement regular access reviews and unused access detection",
+                            "helpfulResource": {
+                                "displayText": "Learn about IAM Access Analyzer for unused access",
+                                "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/what-is-access-analyzer.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Establish a regular cadence for reviewing IdC assignments and permission sets. Use IAM Access Analyzer to identify unused permissions and roles. Implement automated reporting on who has access to which accounts and remove stale assignments when users change roles or leave the organization."
+                            }
                         }
                     ],
                     "riskRules": [
                         {
-                            "condition": "idc_instance && idc_automation",
+                            "condition": "idc_instance && idc_automation && idc_least_privilege && idc_access_reviews",
                             "risk": "NO_RISK"
                         },
                         {
-                            "condition": "idc_instance && !idc_automation",
+                            "condition": "idc_instance && idc_automation && (!idc_least_privilege || !idc_access_reviews)",
                             "risk": "MEDIUM_RISK"
                         },
                         {
@@ -1324,6 +1607,201 @@
                         },
                         {
                             "condition": "(default_sg_restricted && sg_compliance_detection && !sg_auto_remediation) || (default_sg_restricted && !sg_compliance_detection)",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "security_q13",
+                    "title": "How do you mitigate the risk of Identity Provider (IdP) failure across your Landing Zone?",
+                    "description": "If your external Identity Provider becomes unavailable, users may lose access to all AWS accounts federated through it. This question addresses how you plan for and mitigate IdP outages to ensure continued access to critical AWS resources.",
+                    "choices": [
+                        {
+                            "id": "break_glass_idp",
+                            "title": "Implement an automated break-glass mechanism independent of the IdP",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS account best practices for root and emergency access",
+                                "url": "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_best-practices_mgmt-acct.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement an automated break-glass mechanism that does not depend on the external IdP. Use dedicated IAM users or roles stored securely in AWS Secrets Manager with automated credential rotation. Ensure these credentials can be retrieved and used through an out-of-band approval process when the IdP is unavailable."
+                            }
+                        },
+                        {
+                            "id": "idp_redundancy",
+                            "title": "Ensure IdP redundancy and high availability",
+                            "helpfulResource": {
+                                "displayText": "Learn about IAM Identity Center resilience",
+                                "url": "https://docs.aws.amazon.com/singlesignon/latest/userguide/resilience.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Work with your IdP vendor to ensure high availability and disaster recovery capabilities are in place. Consider multi-region IdP deployments, failover configurations, and SLA guarantees. If using a SaaS IdP, understand their uptime commitments and incident communication channels."
+                            }
+                        },
+                        {
+                            "id": "idp_failure_runbook",
+                            "title": "Document and test an IdP failure runbook",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Systems Manager Automation runbooks",
+                                "url": "https://docs.aws.amazon.com/systems-manager/latest/userguide/automation-documents.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create a detailed runbook that documents the steps to follow when the IdP is unavailable, including how to activate break-glass credentials, which critical accounts to prioritize, and how to communicate the outage to affected teams. Test this runbook regularly through tabletop exercises or simulated IdP outages."
+                            }
+                        },
+                        {
+                            "id": "idp_monitoring",
+                            "title": "Monitor IdP health and automate alerting on failures",
+                            "helpfulResource": {
+                                "displayText": "Learn about Amazon CloudWatch synthetic monitoring",
+                                "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement proactive monitoring of your IdP health using CloudWatch Synthetics canaries or external monitoring tools to detect authentication failures. Configure automated alerts to notify the security and operations teams immediately when IdP issues are detected, enabling rapid activation of break-glass procedures."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "break_glass_idp && idp_redundancy && idp_failure_runbook && idp_monitoring",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "break_glass_idp && (idp_redundancy || idp_failure_runbook) && !idp_monitoring",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "security_q14",
+                    "title": "How do you organize security tooling accounts and delegated administration across your Landing Zone?",
+                    "description": "The placement of security tools across your AWS Organization directly impacts operational efficiency, blast radius containment, and visibility. This question addresses whether your security services are centralized in a dedicated account, spread across multiple accounts, or partially centralized.",
+                    "choices": [
+                        {
+                            "id": "security_tooling_scattered",
+                            "title": "Security tools are configured independently in individual accounts",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS security account best practices",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/security-reference-architecture/security-tooling.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Security tools configured independently per account create visibility gaps and management overhead. Plan a migration to a centralized security tooling account model using delegated administration to aggregate findings and manage services from a single account."
+                            }
+                        },
+                        {
+                            "id": "security_tooling_partial",
+                            "title": "Some security tools are centralized but others remain in individual accounts",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Organizations delegated administrator",
+                                "url": "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_integrate_services_list.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You have partial centralization. Identify which security services still lack delegated administration and consolidate them into your security tooling account. Prioritize services like Security Hub, GuardDuty, Config, Macie, and IAM Access Analyzer for centralized management."
+                            }
+                        },
+                        {
+                            "id": "security_tooling_centralized",
+                            "title": "All security tools are centralized in a dedicated security tooling account with delegated administration",
+                            "helpfulResource": {
+                                "displayText": "Learn about the AWS Security Reference Architecture",
+                                "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/security-reference-architecture/architecture.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You have a fully centralized security tooling account with delegated administration for all key services (Security Hub, GuardDuty, Config, Macie, Inspector, IAM Access Analyzer). Ensure this account is in a dedicated Security OU with strict access controls, and regularly review delegated admin configurations."
+                            }
+                        },
+                        {
+                            "id": "security_tooling_governance",
+                            "title": "Implement governance and monitoring for the security tooling account itself",
+                            "helpfulResource": {
+                                "displayText": "Explore SCPs for protecting security accounts",
+                                "url": "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Apply SCPs to prevent member accounts from disabling or modifying centrally managed security services. Monitor the security tooling account for unauthorized changes using CloudTrail and Config rules. Restrict access to the security tooling account to authorized security personnel only."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "security_tooling_centralized && security_tooling_governance",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "security_tooling_partial || (security_tooling_centralized && !security_tooling_governance)",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "security_q15",
+                    "title": "Do you have a strategy to address exception requests to your organization's guardrails?",
+                    "description": "Organizations need a governed process for handling exceptions to SCPs and other guardrails. Without a formal strategy, teams may work around controls in ungoverned ways. This question addresses how you manage, track, and time-limit guardrail exceptions across your Landing Zone.",
+                    "choices": [
+                        {
+                            "id": "exception_ou",
+                            "title": "Implement a dedicated Exceptions OU for accounts requiring temporary guardrail relaxation",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Organizations OU best practices",
+                                "url": "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_best-practices.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create a dedicated Exceptions OU (or PolicyStaging OU) with relaxed SCPs for accounts that require temporary exceptions to standard guardrails. Move accounts into this OU only after a formal approval process, and apply timestamp tags (e.g., ExceptionGrantedDate, ExceptionExpiryDate) to track the temporary nature of the placement."
+                            }
+                        },
+                        {
+                            "id": "exception_approval",
+                            "title": "Establish a formal approval workflow for exception requests",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Service Catalog for governed workflows",
+                                "url": "https://docs.aws.amazon.com/servicecatalog/latest/adminguide/what-is_concepts.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement a formal exception request process that includes business justification, risk assessment, security review, and management approval. Use ticketing systems or Service Catalog products to standardize the request flow and maintain an audit trail of all approved exceptions."
+                            }
+                        },
+                        {
+                            "id": "exception_time_bound",
+                            "title": "Enforce time-bound exceptions with automated expiry and return to standard OU",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Lambda for automation",
+                                "url": "https://docs.aws.amazon.com/lambda/latest/dg/welcome.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Tag accounts in the Exceptions OU with expiry timestamps and implement an automated process (e.g., Lambda + EventBridge scheduled rules) that checks for expired exceptions and automatically moves accounts back to their standard OU. Send notifications to account owners before and upon expiry."
+                            }
+                        },
+                        {
+                            "id": "exception_audit",
+                            "title": "Continuously audit and report on active exceptions",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Config for compliance monitoring",
+                                "url": "https://docs.aws.amazon.com/config/latest/developerguide/evaluate-config.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement regular reporting on all active exceptions, including how long accounts have been in the Exceptions OU, which guardrails are relaxed, and whether expiry dates are approaching. Use AWS Config custom rules or scheduled Lambda functions to flag overdue exceptions and escalate to management."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "exception_ou && exception_approval && exception_time_bound && exception_audit",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "exception_ou && exception_approval && !exception_time_bound",
                             "risk": "MEDIUM_RISK"
                         },
                         {
