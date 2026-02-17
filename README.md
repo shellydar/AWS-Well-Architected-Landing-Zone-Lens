@@ -111,22 +111,11 @@ To use this lens in other AWS accounts within your organization:
 4. Answer each question based on your current implementation
 5. Review the generated improvement plan
 
-## URL Validation
-
-A script is included to verify all documentation URLs in the lens are still valid:
-
-```bash
-chmod +x check_urls.sh
-./check_urls.sh
-```
-
-The script extracts all URLs from the JSON file, checks each one for HTTP 200 status, and reports any broken links.
 
 ## File Structure
 
 ```
 ├── Custom_lens_Landingzone.json   # The custom lens definition
-├── check_urls.sh                  # URL validation script
 └── README.md                      # This file
 ```
 
