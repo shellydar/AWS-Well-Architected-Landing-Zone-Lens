@@ -135,6 +135,489 @@
                             "risk": "HIGH_RISK"
                         }
                     ]
+                },
+                {
+                    "id": "operational_q4",
+                    "title": "How do you implement and enforce a tagging strategy across your Landing Zone?",
+                    "description": "A consistent tagging strategy is foundational for cost allocation, resource management, automation, and governance across a multi-account environment. This question addresses how you define, enforce, and maintain tags across all accounts in your Landing Zone.",
+                    "choices": [
+                        {
+                            "id": "tag_policy_defined",
+                            "title": "Define an organization-wide tagging policy with mandatory tags",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Organizations tag policies",
+                                "url": "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_tag-policies.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Define a standardized set of mandatory tags (e.g., Environment, Owner, CostCenter, Project) and document them in an organization-wide tagging policy. Use AWS Organizations tag policies to enforce allowed values and consistent casing across all accounts."
+                            }
+                        },
+                        {
+                            "id": "tag_enforcement",
+                            "title": "Enforce tagging compliance using preventive and detective controls",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Config required-tags rule",
+                                "url": "https://docs.aws.amazon.com/config/latest/developerguide/required-tags.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement preventive controls using Service Control Policies (SCPs) or IAM policies to deny resource creation without required tags. Deploy detective controls using AWS Config rules (e.g., required-tags) across all accounts via CloudFormation StackSets to identify non-compliant resources."
+                            }
+                        },
+                        {
+                            "id": "tag_automation",
+                            "title": "Automate tag remediation and reporting",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Resource Groups Tag Editor",
+                                "url": "https://docs.aws.amazon.com/ARG/latest/userguide/tag-editor.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement automated remediation for untagged or incorrectly tagged resources using AWS Config auto-remediation with AWS Systems Manager or Lambda. Use AWS Resource Groups Tag Editor and Cost Allocation Tags to generate regular compliance reports and track tagging coverage."
+                            }
+                        },
+                        {
+                            "id": "tag_lifecycle",
+                            "title": "Establish a tagging governance lifecycle with regular reviews",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS tagging best practices",
+                                "url": "https://docs.aws.amazon.com/tag-editor/latest/userguide/tagging-best-practices.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Establish a governance process to regularly review and update your tagging strategy. Include stakeholders from finance, security, and operations to ensure tags remain aligned with organizational needs. Track tagging compliance metrics over time and incorporate tagging requirements into account vending processes."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "tag_policy_defined && tag_enforcement && tag_automation && tag_lifecycle",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "tag_policy_defined && tag_enforcement && !tag_automation",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "tag_policy_defined && !tag_enforcement",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "operational_q5",
+                    "title": "How do you implement centralized patch management across your Landing Zone?",
+                    "description": "Consistent and timely patching is critical for maintaining the security and stability of workloads across a multi-account environment. This question addresses how you centralize, automate, and monitor patch management across all accounts in your Landing Zone.",
+                    "choices": [
+                        {
+                            "id": "patch_baseline",
+                            "title": "Define and enforce patch baselines across the organization",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Systems Manager Patch Manager",
+                                "url": "https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-patch.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Define patch baselines in AWS Systems Manager Patch Manager for each operating system and application type used across your organization. Use AWS Organizations and CloudFormation StackSets to deploy consistent patch baselines to all accounts."
+                            }
+                        },
+                        {
+                            "id": "patch_automation",
+                            "title": "Automate patch deployment using maintenance windows",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Systems Manager Maintenance Windows",
+                                "url": "https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-maintenance.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Configure AWS Systems Manager Maintenance Windows to automate patch deployment across all accounts. Define schedules that align with your change management processes and use patching orchestration to minimize downtime."
+                            }
+                        },
+                        {
+                            "id": "patch_compliance_reporting",
+                            "title": "Implement centralized patch compliance reporting",
+                            "helpfulResource": {
+                                "displayText": "Learn about Systems Manager compliance reporting",
+                                "url": "https://docs.aws.amazon.com/systems-manager/latest/userguide/sysman-compliance-about.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AWS Systems Manager Compliance to aggregate patch compliance data from all accounts into a centralized view. Configure AWS Config rules to detect unpatched instances and set up dashboards to track patch compliance across the organization."
+                            }
+                        },
+                        {
+                            "id": "patch_remediation",
+                            "title": "Automate detection and remediation of non-compliant instances",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Config auto-remediation",
+                                "url": "https://docs.aws.amazon.com/config/latest/developerguide/remediation.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement automated remediation workflows using AWS Config auto-remediation and AWS Systems Manager Automation runbooks to automatically patch non-compliant instances. Set up alerts for instances that remain non-compliant after remediation attempts."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "patch_baseline && patch_automation && patch_compliance_reporting && patch_remediation",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "patch_baseline && patch_automation && patch_compliance_reporting && !patch_remediation",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "patch_baseline && !patch_automation",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "operational_q6",
+                    "title": "How do you use AWS Service Catalog to standardize resource provisioning across your Landing Zone?",
+                    "description": "AWS Service Catalog enables organizations to provide self-service access to approved, pre-configured resources while maintaining governance and compliance. This question addresses how you use Service Catalog to standardize and govern resource provisioning across all accounts in your Landing Zone.",
+                    "choices": [
+                        {
+                            "id": "service_catalog_portfolios",
+                            "title": "Create and manage portfolios of approved products",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Service Catalog portfolios",
+                                "url": "https://docs.aws.amazon.com/servicecatalog/latest/adminguide/what-is_concepts.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create Service Catalog portfolios containing approved CloudFormation or Terraform templates for common infrastructure patterns (e.g., VPCs, databases, compute). Organize products by team function or workload type to simplify discovery."
+                            }
+                        },
+                        {
+                            "id": "service_catalog_sharing",
+                            "title": "Share portfolios across the organization using AWS Organizations",
+                            "helpfulResource": {
+                                "displayText": "Learn about sharing Service Catalog portfolios",
+                                "url": "https://docs.aws.amazon.com/servicecatalog/latest/adminguide/catalogs_portfolios_sharing.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Share Service Catalog portfolios across your AWS Organization or specific OUs so that all accounts have access to approved products. Use organizational sharing to automatically make portfolios available to new accounts."
+                            }
+                        },
+                        {
+                            "id": "service_catalog_constraints",
+                            "title": "Apply launch constraints and governance controls to products",
+                            "helpfulResource": {
+                                "displayText": "Explore Service Catalog constraints",
+                                "url": "https://docs.aws.amazon.com/servicecatalog/latest/adminguide/constraints.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Apply launch constraints to control the IAM role used when provisioning products, ensuring least privilege. Use template constraints to limit configurable parameters and tag update constraints to enforce tagging standards on provisioned resources."
+                            }
+                        },
+                        {
+                            "id": "service_catalog_lifecycle",
+                            "title": "Implement product versioning and lifecycle management",
+                            "helpfulResource": {
+                                "displayText": "Learn about managing Service Catalog products",
+                                "url": "https://docs.aws.amazon.com/servicecatalog/latest/adminguide/productmgmt.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement version management for Service Catalog products with a CI/CD pipeline to test and publish updates. Deprecate outdated versions and notify teams to upgrade. Track provisioned product usage to identify and retire unused products."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "service_catalog_portfolios && service_catalog_sharing && service_catalog_constraints && service_catalog_lifecycle",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "service_catalog_portfolios && service_catalog_sharing && !service_catalog_constraints",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "service_catalog_portfolios && !service_catalog_sharing",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "operational_q7",
+                    "title": "How do you ensure resource backup policies are enforced across all accounts, new and existing?",
+                    "description": "A centralized backup strategy is essential for data protection and disaster recovery across a multi-account environment. This question addresses how you define, deploy, and enforce backup policies across all accounts in your Landing Zone, ensuring both new and existing accounts are covered.",
+                    "choices": [
+                        {
+                            "id": "backup_policy_org",
+                            "title": "Define and enforce backup policies using AWS Organizations backup policies",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Organizations backup policies",
+                                "url": "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_backup.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Enable backup policies in AWS Organizations and define organization-level backup plans that automatically apply to all member accounts, including newly created ones. Specify backup frequency, retention periods, and target resource types."
+                            }
+                        },
+                        {
+                            "id": "backup_centralized",
+                            "title": "Centralize backup management using AWS Backup with cross-account management",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Backup cross-account management",
+                                "url": "https://docs.aws.amazon.com/aws-backup/latest/devguide/manage-cross-account.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Configure AWS Backup with a delegated administrator account to centrally manage backup plans, vaults, and policies across all accounts. Use cross-account backup to copy backups to a centralized vault for additional protection."
+                            }
+                        },
+                        {
+                            "id": "backup_compliance_monitoring",
+                            "title": "Monitor backup compliance and detect unprotected resources",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Backup Audit Manager",
+                                "url": "https://docs.aws.amazon.com/aws-backup/latest/devguide/backup-audit-framework.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AWS Backup Audit Manager to create audit frameworks that continuously evaluate backup compliance across all accounts. Deploy AWS Config rules (e.g., backup-plan-min-frequency-and-min-retention-check) to detect resources that are not covered by a backup plan."
+                            }
+                        },
+                        {
+                            "id": "backup_testing",
+                            "title": "Regularly test backup restoration and validate recovery procedures",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Backup restore testing",
+                                "url": "https://docs.aws.amazon.com/aws-backup/latest/devguide/restore-testing.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement automated restore testing using AWS Backup restore testing plans to regularly validate that backups can be successfully restored. Document recovery procedures and track recovery time objectives (RTO) and recovery point objectives (RPO) across the organization."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "backup_policy_org && backup_centralized && backup_compliance_monitoring && backup_testing",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "backup_policy_org && backup_centralized && backup_compliance_monitoring && !backup_testing",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "backup_policy_org && !backup_centralized",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "operational_q8",
+                    "title": "How do you maintain a centralized resource inventory across all accounts in your Landing Zone?",
+                    "description": "A comprehensive resource inventory is essential for governance, cost management, security posture assessment, and operational visibility across a multi-account environment. This question addresses how you use AWS Config and related services to discover, track, and query all resources across your organization.",
+                    "choices": [
+                        {
+                            "id": "config_all_accounts",
+                            "title": "Enable AWS Config recording across all accounts and Regions",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Config multi-account, multi-Region data aggregation",
+                                "url": "https://docs.aws.amazon.com/config/latest/developerguide/aggregate-data.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Enable AWS Config recorders in all accounts and all governed Regions using CloudFormation StackSets or AWS Control Tower. Record all supported resource types to maintain a complete inventory of your AWS resources."
+                            }
+                        },
+                        {
+                            "id": "config_aggregator",
+                            "title": "Deploy an organization-level Config aggregator for centralized visibility",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Config aggregators",
+                                "url": "https://docs.aws.amazon.com/config/latest/developerguide/setup-aggregator-console.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create an organization-level AWS Config aggregator in a centralized account to collect configuration and compliance data from all member accounts and Regions into a single view."
+                            }
+                        },
+                        {
+                            "id": "config_advanced_queries",
+                            "title": "Use AWS Config advanced queries for resource discovery and reporting",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Config advanced queries",
+                                "url": "https://docs.aws.amazon.com/config/latest/developerguide/querying-AWS-resources.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AWS Config advanced queries (SQL-based) to search and filter resources across your entire organization. Build queries for common inventory needs such as listing all public-facing resources, untagged resources, or resources by type and Region."
+                            }
+                        },
+                        {
+                            "id": "inventory_automation",
+                            "title": "Automate inventory reporting and drift detection",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Config conformance packs",
+                                "url": "https://docs.aws.amazon.com/config/latest/developerguide/conformance-packs.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement automated inventory reports using Config advanced queries and Lambda to generate regular resource inventories. Use Config rules and conformance packs to detect configuration drift and unauthorized resource deployments across the organization."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "config_all_accounts && config_aggregator && config_advanced_queries && inventory_automation",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "config_all_accounts && config_aggregator && !config_advanced_queries",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "config_all_accounts && !config_aggregator",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "operational_q9",
+                    "title": "How do you centralize AWS Health notifications across your Landing Zone?",
+                    "description": "AWS Health provides visibility into service events, scheduled maintenance, and account-specific issues that may affect your workloads. This question addresses how you aggregate, monitor, and act on health notifications across all accounts in your organization.",
+                    "choices": [
+                        {
+                            "id": "health_org_view",
+                            "title": "Enable AWS Health organizational view",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Health organizational view",
+                                "url": "https://docs.aws.amazon.com/health/latest/ug/aggregate-events.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Enable the AWS Health organizational view from your management account to aggregate health events from all member accounts into a single centralized view. This provides visibility into service disruptions and maintenance events across your entire organization."
+                            }
+                        },
+                        {
+                            "id": "health_eventbridge",
+                            "title": "Automate health event notifications using Amazon EventBridge",
+                            "helpfulResource": {
+                                "displayText": "Learn about monitoring AWS Health events with EventBridge",
+                                "url": "https://docs.aws.amazon.com/health/latest/ug/cloudwatch-events-health.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Configure Amazon EventBridge rules to capture AWS Health events and route notifications to appropriate channels (e.g., SNS topics, Slack, PagerDuty). Set up rules for different event types to ensure the right teams are notified about relevant health events."
+                            }
+                        },
+                        {
+                            "id": "health_dashboard",
+                            "title": "Implement a centralized health notification dashboard",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Health Dashboard",
+                                "url": "https://docs.aws.amazon.com/health/latest/ug/aws-health-dashboard-status.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Build a centralized health dashboard using AWS Health API data, CloudWatch, or third-party tools to provide a single pane of glass for all health events across the organization. Include historical event tracking and impact analysis."
+                            }
+                        },
+                        {
+                            "id": "health_automated_response",
+                            "title": "Automate responses to critical health events",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Health Aware",
+                                "url": "https://aws.amazon.com/blogs/mt/aws-health-aware-customize-aws-health-alerts-for-organizational-and-personal-aws-accounts/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement automated response workflows using EventBridge, Lambda, and Systems Manager to take action on critical health events. For example, automatically failover resources during service disruptions or create incident tickets for scheduled maintenance windows."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "health_org_view && health_eventbridge && health_dashboard && health_automated_response",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "health_org_view && health_eventbridge && !health_dashboard",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "health_org_view && !health_eventbridge",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "operational_q10",
+                    "title": "How do you manage alternate contacts across all accounts in your Landing Zone?",
+                    "description": "AWS alternate contacts (billing, operations, security) ensure that the right people receive important notifications from AWS. This question addresses how you automate the configuration and maintenance of alternate contacts across all accounts, including newly created ones.",
+                    "choices": [
+                        {
+                            "id": "alternate_contacts_defined",
+                            "title": "Define standard alternate contacts for all account types",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS account alternate contacts",
+                                "url": "https://docs.aws.amazon.com/accounts/latest/reference/manage-acct-update-contact-alternate.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Define standard alternate contacts (billing, operations, security) for each account type or OU. Use distribution lists or shared mailboxes rather than individual email addresses to ensure continuity when team members change."
+                            }
+                        },
+                        {
+                            "id": "alternate_contacts_automated",
+                            "title": "Automate alternate contact configuration for new accounts",
+                            "helpfulResource": {
+                                "displayText": "Explore the AWS Account Management API",
+                                "url": "https://docs.aws.amazon.com/accounts/latest/reference/API_PutAlternateContact.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Integrate alternate contact configuration into your account vending process using the AWS Account Management API (PutAlternateContact). Ensure that every new account is automatically provisioned with the correct billing, operations, and security contacts."
+                            }
+                        },
+                        {
+                            "id": "alternate_contacts_compliance",
+                            "title": "Monitor and enforce alternate contact compliance across existing accounts",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Config custom rules",
+                                "url": "https://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement a periodic audit using Lambda and the Account Management API to verify that all accounts have the correct alternate contacts configured. Use AWS Config custom rules or scheduled scripts to detect and report accounts with missing or outdated contacts."
+                            }
+                        },
+                        {
+                            "id": "alternate_contacts_lifecycle",
+                            "title": "Establish a lifecycle process for reviewing and updating contacts",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Organizations account management",
+                                "url": "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Establish a regular review cycle (e.g., quarterly) to validate that alternate contacts remain accurate. Implement automated notifications when team changes occur and integrate contact updates into your organizational change management processes."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "alternate_contacts_defined && alternate_contacts_automated && alternate_contacts_compliance && alternate_contacts_lifecycle",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "alternate_contacts_defined && alternate_contacts_automated && !alternate_contacts_compliance",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "alternate_contacts_defined && !alternate_contacts_automated",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
                 }
             ]
         },
@@ -187,6 +670,79 @@
                 },
                 {
                     "id": "security_q2",
+                    "title": "What is your identity and access management strategy across your Landing Zone?",
+                    "description": "A well-defined IAM strategy is fundamental to securing a multi-account environment. This question addresses whether you use federated or native IAM users, which Identity Provider (IdP) you employ for managing identities outside of AWS, and how you federate AWS accounts with your IdP (individually per account or centrally via AWS IAM Identity Center).",
+                    "choices": [
+                        {
+                            "id": "native_iam_users",
+                            "title": "Using native IAM users in individual accounts",
+                            "helpfulResource": {
+                                "displayText": "Learn about IAM users and best practices",
+                                "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Native IAM users in individual accounts create management overhead and security risks at scale. Plan a migration to federated access using an external Identity Provider integrated with AWS IAM Identity Center to centralize identity management."
+                            }
+                        },
+                        {
+                            "id": "per_account_federation",
+                            "title": "Federated access configured individually per account with an external IdP",
+                            "helpfulResource": {
+                                "displayText": "Learn about IAM identity providers and federation",
+                                "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Per-account federation with an external IdP (e.g., Okta, Azure AD, Ping Identity) provides federated access but creates management complexity as accounts grow. Migrate to AWS IAM Identity Center for centralized federation across all accounts via a single integration point."
+                            }
+                        },
+                        {
+                            "id": "centralized_sso_federation",
+                            "title": "Centralized federation via AWS IAM Identity Center with an external IdP",
+                            "helpfulResource": {
+                                "displayText": "Learn about connecting an external IdP to IAM Identity Center",
+                                "url": "https://docs.aws.amazon.com/singlesignon/latest/userguide/manage-your-identity-source-idp.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You have centralized federation through IAM Identity Center integrated with an external IdP. Ensure you have automated provisioning (SCIM) enabled, permission sets aligned with least privilege, and regular access reviews in place."
+                            }
+                        },
+                        {
+                            "id": "iam_governance",
+                            "title": "Implement IAM governance with automated access reviews and least privilege enforcement",
+                            "helpfulResource": {
+                                "displayText": "Explore IAM Access Analyzer for policy validation",
+                                "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/what-is-access-analyzer.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Complement your federation strategy with IAM Access Analyzer to identify unused access and overly permissive policies. Implement automated access reviews, enforce MFA for all human identities, and use SCPs to prevent creation of native IAM users in member accounts."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "centralized_sso_federation && iam_governance",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "centralized_sso_federation && !iam_governance",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "per_account_federation && !centralized_sso_federation",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "native_iam_users && !per_account_federation && !centralized_sso_federation",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "security_q3",
                     "title": "How do you implement centralized compliance management?",
                     "description": "Centralized compliance management is essential for maintaining consistent compliance standards across your Landing Zone. This question addresses how you implement and manage compliance across all accounts in your Landing Zone.",
                     "choices": [
@@ -240,7 +796,7 @@
                     ]
                 },
                 {
-                    "id": "security_q3",
+                    "id": "security_q4",
                     "title": "How do you manage compliance standards across your Landing Zone?",
                     "description": "Compliance is a critical aspect of many organizations' IT governance. This question addresses how you implement, manage, and enforce compliance standards across your Landing Zone, ensuring that different accounts meet their specific compliance requirements.",
                     "choices": [
@@ -294,7 +850,7 @@
                     ]
                 },
                 {
-                    "id": "security_q4",
+                    "id": "security_q5",
                     "title": "How do you manage data classification across your Landing Zone?",
                     "description": "Proper data classification is crucial for maintaining security, compliance, and appropriate access controls. This question addresses how you identify, categorize, and manage different types of data across your Landing Zone accounts.",
                     "choices": [
@@ -359,7 +915,7 @@
                     ]
                 },
                 {
-                    "id": "security_q5",
+                    "id": "security_q6",
                     "title": "How do you implement and maintain automated incident response across your Landing Zone?",
                     "description": "Automated incident response is crucial for maintaining the security and operational integrity of your Landing Zone. This question addresses how you implement and automatically deploy incident response mechanisms across all accounts, including newly created ones.",
                     "choices": [
@@ -424,7 +980,7 @@
                     ]
                 },
                 {
-                    "id": "security_q6",
+                    "id": "security_q7",
                     "title": "How do you manage emergency access across your Landing Zone?",
                     "description": "Emergency access mechanisms, such as break glass accounts, are essential for maintaining operational continuity in critical situations. This question addresses how you implement and manage emergency access across all accounts in your Landing Zone, including newly created ones.",
                     "choices": [
@@ -484,6 +1040,355 @@
                         },
                         {
                             "condition": "break_glass_account && !automated_access || !break_glass_account",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "security_q8",
+                    "title": "How do you manage CloudTrail log storage and retention across your Landing Zone?",
+                    "description": "CloudTrail provides a comprehensive audit trail of API activity across your AWS environment. This question addresses how you store, centralize, and ensure completeness of CloudTrail log data across all accounts and regions in your Landing Zone.",
+                    "choices": [
+                        {
+                            "id": "cloudtrail_single_account",
+                            "title": "CloudTrail logs are stored in a single account and region",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS CloudTrail",
+                                "url": "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You have a basic CloudTrail setup in a single account and region. To improve, configure an organization trail that delivers logs from all accounts and regions to a centralized, dedicated log archive account."
+                            }
+                        },
+                        {
+                            "id": "cloudtrail_centralized",
+                            "title": "CloudTrail logs are stored in a centralized account in one region",
+                            "helpfulResource": {
+                                "displayText": "Learn about creating an organization trail",
+                                "url": "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/creating-trail-organization.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You have centralized CloudTrail log storage, which is a good foundation. Ensure that all accounts and all regions are covered by enabling an organization trail, and implement automated detection to identify accounts or regions that may not be sending logs."
+                            }
+                        },
+                        {
+                            "id": "cloudtrail_partial_coverage",
+                            "title": "CloudTrail logs are in a centralized account but not all accounts are configured",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Config rules for CloudTrail compliance",
+                                "url": "https://docs.aws.amazon.com/config/latest/developerguide/cloudtrail-enabled.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Ensure complete coverage by enabling an AWS Organizations trail that automatically applies to all member accounts. Use AWS Config rules such as 'cloudtrail-enabled' to detect accounts that are not properly configured and remediate gaps."
+                            }
+                        },
+                        {
+                            "id": "cloudtrail_full_coverage",
+                            "title": "All accounts and regions are covered with automatic detection and remediation",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS CloudTrail Lake for centralized querying",
+                                "url": "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-lake.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "You have comprehensive CloudTrail coverage with automated detection and remediation. Continue to review and refine your setup by leveraging CloudTrail Lake for centralized querying and analysis, and ensure log integrity validation is enabled."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "cloudtrail_full_coverage",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "cloudtrail_centralized && !cloudtrail_full_coverage",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "cloudtrail_partial_coverage && !cloudtrail_centralized && !cloudtrail_full_coverage",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "cloudtrail_single_account && !cloudtrail_centralized && !cloudtrail_full_coverage",
+                            "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "security_q9",
+                    "title": "How do you enforce the use of approved AMIs (Golden Images) for EC2 instances across your Landing Zone?",
+                    "description": "Using approved, hardened AMIs ensures that EC2 instances are launched with a consistent, secure baseline. This question addresses how you create, distribute, and enforce the use of golden images across all accounts in your Landing Zone.",
+                    "choices": [
+                        {
+                            "id": "golden_ami_pipeline",
+                            "title": "Implement an automated golden AMI build pipeline",
+                            "helpfulResource": {
+                                "displayText": "Learn about EC2 Image Builder",
+                                "url": "https://docs.aws.amazon.com/imagebuilder/latest/userguide/what-is-image-builder.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use EC2 Image Builder to create automated pipelines that build, test, and publish hardened AMIs. Include security benchmarks (e.g., CIS) and required agents in the image recipes, and schedule regular rebuilds to incorporate the latest patches."
+                            }
+                        },
+                        {
+                            "id": "ami_sharing",
+                            "title": "Centrally share approved AMIs across the organization",
+                            "helpfulResource": {
+                                "displayText": "Learn about sharing AMIs with AWS Organizations",
+                                "url": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/sharing-amis.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Share approved AMIs from a centralized account to all member accounts using AWS Organizations integration or AWS RAM. Maintain a catalog of approved AMIs and ensure new versions are automatically distributed."
+                            }
+                        },
+                        {
+                            "id": "ami_enforcement",
+                            "title": "Enforce the use of approved AMIs via preventive controls",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Config approved-amis-by-id rule",
+                                "url": "https://docs.aws.amazon.com/config/latest/developerguide/approved-amis-by-id.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use AWS Config rules (approved-amis-by-id or approved-amis-by-tag) to detect EC2 instances launched from unapproved AMIs. Complement with IAM policies or SCPs that restrict ec2:RunInstances to only approved AMI IDs or tags."
+                            }
+                        },
+                        {
+                            "id": "ami_lifecycle",
+                            "title": "Implement AMI lifecycle management with deprecation and rotation",
+                            "helpfulResource": {
+                                "displayText": "Learn about AMI deprecation",
+                                "url": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ami-deprecate.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Establish a lifecycle process for golden AMIs that includes versioning, deprecation of older images, and automated notifications to account owners when they are running instances on deprecated AMIs. Use AMI deprecation features to prevent new launches from outdated images."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "golden_ami_pipeline && ami_sharing && ami_enforcement && ami_lifecycle",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "golden_ami_pipeline && ami_sharing && ami_enforcement && !ami_lifecycle",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "golden_ami_pipeline && ami_sharing && !ami_enforcement",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "security_q10",
+                    "title": "How do you prevent the provisioning of resources in prohibited AWS Regions?",
+                    "description": "Restricting resource provisioning to approved AWS Regions is essential for data sovereignty, regulatory compliance, and reducing your attack surface. This question addresses how you define, enforce, and monitor region restrictions across all accounts in your Landing Zone.",
+                    "choices": [
+                        {
+                            "id": "region_deny_scp",
+                            "title": "Enforce region restrictions using Service Control Policies (SCPs)",
+                            "helpfulResource": {
+                                "displayText": "Learn about SCPs to restrict AWS Regions",
+                                "url": "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps_examples_general.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement SCPs that deny all actions in non-approved AWS Regions. Apply these policies at the appropriate OU level to ensure all member accounts are restricted. Include exemptions only for global services (e.g., IAM, CloudFront, Route 53) that must operate across regions."
+                            }
+                        },
+                        {
+                            "id": "region_guardrails",
+                            "title": "Use AWS Control Tower region deny guardrails",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Control Tower Region deny setting",
+                                "url": "https://docs.aws.amazon.com/controltower/latest/userguide/region-deny.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "If using AWS Control Tower, enable the Region deny setting to automatically restrict resource provisioning to your governed Regions. This provides a managed approach that stays updated with global service exemptions."
+                            }
+                        },
+                        {
+                            "id": "region_compliance_monitoring",
+                            "title": "Monitor for resources deployed in unauthorized Regions",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Config multi-Region, multi-account data aggregation",
+                                "url": "https://docs.aws.amazon.com/config/latest/developerguide/aggregate-data.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Deploy AWS Config aggregators across all Regions to detect any resources that may have been provisioned in unauthorized Regions. Set up alerts and automated remediation to address any violations promptly."
+                            }
+                        },
+                        {
+                            "id": "region_exception_process",
+                            "title": "Establish a governed exception process for Region access",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Organizations policy management",
+                                "url": "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Define a formal exception process for teams that require access to additional Regions. Include approval workflows, time-bound access, and audit trails. Use OU-level SCPs to grant Region access only to specific accounts that have been approved through this process."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "region_deny_scp && region_compliance_monitoring && region_exception_process",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "region_guardrails && region_compliance_monitoring && region_exception_process",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(region_deny_scp || region_guardrails) && !region_compliance_monitoring",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "security_q11",
+                    "title": "Do you have a security baseline automatically applied to all accounts in your Landing Zone?",
+                    "description": "A security baseline ensures that every account, including newly provisioned ones, has essential security services enabled from day one. This question addresses how you automatically deploy and maintain services such as GuardDuty, Security Hub, AWS Config, and VPC Flow Logs across all accounts.",
+                    "choices": [
+                        {
+                            "id": "guardduty_enabled",
+                            "title": "Enable Amazon GuardDuty across all accounts automatically",
+                            "helpfulResource": {
+                                "displayText": "Learn about GuardDuty multi-account management",
+                                "url": "https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_accounts.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Enable GuardDuty in a delegated administrator account and configure it to automatically enroll all existing and new member accounts. Centralize findings to a security account for monitoring and response."
+                            }
+                        },
+                        {
+                            "id": "securityhub_enabled",
+                            "title": "Enable AWS Security Hub across all accounts with security standards",
+                            "helpfulResource": {
+                                "displayText": "Learn about Security Hub multi-account management",
+                                "url": "https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-accounts.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Enable Security Hub in a delegated administrator account with auto-enable for new accounts. Activate relevant security standards (e.g., AWS Foundational Security Best Practices, CIS Benchmarks) and centralize findings for organization-wide visibility."
+                            }
+                        },
+                        {
+                            "id": "vpc_flow_logs_enabled",
+                            "title": "Enable VPC Flow Logs and AWS Config across all accounts",
+                            "helpfulResource": {
+                                "displayText": "Learn about VPC Flow Logs",
+                                "url": "https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use CloudFormation StackSets or AWS Control Tower customizations to automatically deploy VPC Flow Logs and AWS Config recorders in every account. Route flow logs to a centralized logging account for analysis and retention."
+                            }
+                        },
+                        {
+                            "id": "baseline_drift_detection",
+                            "title": "Implement automated drift detection and remediation for the security baseline",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Config conformance packs",
+                                "url": "https://docs.aws.amazon.com/config/latest/developerguide/conformance-packs.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Deploy AWS Config conformance packs to continuously monitor that all baseline security services remain enabled. Implement automated remediation using Config auto-remediation and Systems Manager Automation to re-enable any services that are disabled or misconfigured."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "guardduty_enabled && securityhub_enabled && vpc_flow_logs_enabled && baseline_drift_detection",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "guardduty_enabled && securityhub_enabled && vpc_flow_logs_enabled && !baseline_drift_detection",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "(guardduty_enabled || securityhub_enabled) && !vpc_flow_logs_enabled",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "security_q12",
+                    "title": "Do you have standard default security group rules applied to all VPCs across your organization?",
+                    "description": "The default security group in every VPC allows unrestricted inbound traffic from itself and all outbound traffic by default. Standardizing and locking down default security group rules across all accounts is essential to prevent unintended network exposure. This question addresses how you manage and enforce security group baselines across your Landing Zone.",
+                    "choices": [
+                        {
+                            "id": "default_sg_restricted",
+                            "title": "Restrict the default security group in all VPCs to deny all traffic",
+                            "helpfulResource": {
+                                "displayText": "Learn about restricting default security groups",
+                                "url": "https://docs.aws.amazon.com/securityhub/latest/userguide/ec2-controls.html#ec2-2"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Modify the default security group in all VPCs to remove all inbound and outbound rules, effectively denying all traffic. Use CloudFormation StackSets or Control Tower customizations to enforce this configuration on all existing and new accounts."
+                            }
+                        },
+                        {
+                            "id": "sg_baseline_templates",
+                            "title": "Deploy standardized security group templates to all accounts",
+                            "helpfulResource": {
+                                "displayText": "Explore CloudFormation StackSets for multi-account deployment",
+                                "url": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/what-is-cfnstacksets.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Create a set of standardized security group templates (e.g., web tier, application tier, database tier) and deploy them to all accounts using CloudFormation StackSets. Ensure teams use these pre-approved security groups instead of creating ad-hoc rules."
+                            }
+                        },
+                        {
+                            "id": "sg_compliance_detection",
+                            "title": "Detect and alert on non-compliant security group configurations",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Config rules for security groups",
+                                "url": "https://docs.aws.amazon.com/config/latest/developerguide/restricted-common-ports.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Deploy AWS Config rules (e.g., vpc-default-security-group-closed, restricted-common-ports) across all accounts to continuously detect security groups that allow unrestricted access or use the default security group. Centralize findings in Security Hub."
+                            }
+                        },
+                        {
+                            "id": "sg_auto_remediation",
+                            "title": "Automate remediation of non-compliant security groups",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Config auto-remediation",
+                                "url": "https://docs.aws.amazon.com/config/latest/developerguide/remediation.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement AWS Config auto-remediation using Systems Manager Automation runbooks to automatically revert non-compliant security group changes. Ensure the default security group is locked down and any unauthorized modifications are automatically corrected."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "default_sg_restricted && sg_baseline_templates && sg_compliance_detection && sg_auto_remediation",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "default_sg_restricted && sg_compliance_detection && !sg_auto_remediation",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default_sg_restricted && !sg_compliance_detection",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
                             "risk": "HIGH_RISK"
                         }
                     ]
@@ -628,7 +1533,7 @@
         },
         {
             "id": "performance",
-            "name": "performance",
+            "name": "Performance Efficiency",
             "questions": [
                 {
                     "id": "performance_q1",
@@ -741,7 +1646,7 @@
                         },
                         {
                             "condition": "selective_connectivity && automated_connectivity && default_isolation && !network_monitoring",
-                            "risk": "LOW_RISK"
+                            "risk": "MEDIUM_RISK"
                         },
                         {
                             "condition": "selective_connectivity && (automated_connectivity || default_isolation) && !network_monitoring",
@@ -750,6 +1655,75 @@
                         {
                             "condition": "selective_connectivity && !automated_connectivity && !default_isolation",
                             "risk": "HIGH_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                },
+                {
+                    "id": "performance_q3",
+                    "title": "How do you manage IP address allocation (IPAM) and CIDR ranges across your organization?",
+                    "description": "Effective IP address management is critical for avoiding CIDR conflicts, enabling seamless network connectivity, and scaling your multi-account environment. This question addresses how you plan, allocate, and govern IP address space across all accounts and VPCs in your Landing Zone.",
+                    "choices": [
+                        {
+                            "id": "aws_ipam",
+                            "title": "Use Amazon VPC IPAM for centralized IP address management",
+                            "helpfulResource": {
+                                "displayText": "Learn about Amazon VPC IPAM",
+                                "url": "https://docs.aws.amazon.com/vpc/latest/ipam/what-it-is-ipam.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Deploy Amazon VPC IPAM with an organization-level delegated administrator. Create IPAM pools with defined CIDR ranges for each environment (production, staging, sandbox) and Region. Use IPAM to automatically allocate non-overlapping CIDRs to new VPCs."
+                            }
+                        },
+                        {
+                            "id": "ipam_automated_allocation",
+                            "title": "Automate CIDR allocation for new accounts and VPCs",
+                            "helpfulResource": {
+                                "displayText": "Explore IPAM integration with AWS Organizations",
+                                "url": "https://docs.aws.amazon.com/vpc/latest/ipam/enable-integ-ipam.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Integrate IPAM with your account vending process so that new accounts and VPCs automatically receive CIDR allocations from the appropriate pool. Use CloudFormation or CDK to provision VPCs with IPAM-allocated CIDRs, preventing manual errors and overlaps."
+                            }
+                        },
+                        {
+                            "id": "ipam_compliance_monitoring",
+                            "title": "Monitor for CIDR conflicts and non-compliant allocations",
+                            "helpfulResource": {
+                                "displayText": "Learn about IPAM monitoring and compliance",
+                                "url": "https://docs.aws.amazon.com/vpc/latest/ipam/monitor-cidr-compliance-ipam.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Use IPAM compliance features to detect overlapping CIDRs and VPCs created outside of managed pools. Set up alerts for non-compliant allocations and implement remediation processes to bring them into compliance."
+                            }
+                        },
+                        {
+                            "id": "ipam_capacity_planning",
+                            "title": "Implement IP address capacity planning and forecasting",
+                            "helpfulResource": {
+                                "displayText": "Explore IPAM resource planning",
+                                "url": "https://docs.aws.amazon.com/vpc/latest/ipam/view-ipam-resources.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Regularly review IPAM pool utilization to forecast IP address consumption. Plan CIDR expansions proactively and establish processes for requesting additional address space before pools are exhausted."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "aws_ipam && ipam_automated_allocation && ipam_compliance_monitoring && ipam_capacity_planning",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "aws_ipam && ipam_automated_allocation && !ipam_compliance_monitoring",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "aws_ipam && !ipam_automated_allocation",
+                            "risk": "MEDIUM_RISK"
                         },
                         {
                             "condition": "default",
