@@ -46,3 +46,113 @@ This lens provides a structured review framework across **4 pillars** with **28 
 | security_q10 | Region restriction enforcement |
 | security_q11 | Security baseline (GuardDuty, Security Hub, VPC Flow Logs) |
 | security_q12 | Default security group rules standardization |
+
+### Cost Optimization (3 Questions)
+
+| ID | Topic |
+|----|-------|
+| cost_q1 | Cost monitoring and management (CUDOS, Cost Explorer) |
+| cost_q2 | Sandbox environment cost and lifecycle management |
+| cost_q3 | Third-party software procurement (Private Marketplace, License Manager) |
+
+### Performance Efficiency (3 Questions)
+
+| ID | Topic |
+|----|-------|
+| performance_q1 | AWS Organization structure design |
+| performance_q2 | Network connectivity for new accounts (Transit Gateway) |
+| performance_q3 | IPAM and CIDR range management |
+
+## Risk Levels
+
+Each question uses risk rules to evaluate your current posture:
+
+| Risk Level | Meaning |
+|------------|---------|
+| NO_RISK | All recommended practices are in place |
+| MEDIUM_RISK | Partial implementation; key areas need improvement |
+| HIGH_RISK | Critical gaps; immediate action recommended |
+
+## How to Use
+
+### Import the Custom Lens
+
+1. Sign in to the [AWS Management Console](https://console.aws.amazon.com/)
+2. Navigate to the [AWS Well-Architected Tool](https://console.aws.amazon.com/wellarchitected/)
+3. In the left navigation pane, click **Custom lenses**
+4. Click **Create custom lens**
+5. Under **JSON file**, click **Choose file** and select `Custom_lens_Landingzone.json`
+6. Click **Submit and create**
+7. The lens will appear in your custom lenses list with a status of **DRAFT**
+
+### Publish the Lens
+
+1. In **Custom lenses**, select the newly created lens
+2. Click **Publish lens**
+3. Enter a version name (e.g., `1.0.0`) and an optional description of changes
+4. Click **Publish**
+5. The lens status will change to **PUBLISHED** and is now available for workload reviews
+
+### Share the Lens Across Accounts (Optional)
+
+To use this lens in other AWS accounts within your organization:
+
+1. In **Custom lenses**, select the published lens
+2. Click **Shares** tab, then **Create share**
+3. Choose to share with individual AWS account IDs or your entire AWS Organization
+4. The receiving accounts must accept the share before the lens becomes available in their console
+5. Shared lenses appear under **Custom lenses** in the receiving account
+
+### Create a Workload Review
+
+1. In the Well-Architected Tool, go to **Workloads**
+2. Create a new workload or select an existing one
+3. Under **Lenses**, apply the **Landing Zone lens**
+4. Answer each question based on your current implementation
+5. Review the generated improvement plan
+
+## URL Validation
+
+A script is included to verify all documentation URLs in the lens are still valid:
+
+```bash
+chmod +x check_urls.sh
+./check_urls.sh
+```
+
+The script extracts all URLs from the JSON file, checks each one for HTTP 200 status, and reports any broken links.
+
+## File Structure
+
+```
+├── Custom_lens_Landingzone.json   # The custom lens definition
+├── check_urls.sh                  # URL validation script
+└── README.md                      # This file
+```
+
+## Schema
+
+This lens follows the [AWS Well-Architected Custom Lens schema](https://docs.aws.amazon.com/wellarchitected/latest/userguide/lenses-format-specification.html) version `2021-11-01`.
+
+## Key AWS Services Referenced
+
+- AWS Organizations, Control Tower, Service Control Policies
+- IAM Identity Center, IAM Access Analyzer
+- AWS Config, Security Hub, GuardDuty
+- CloudTrail, CloudWatch, EventBridge
+- AWS Backup, Systems Manager (Patch Manager, Inventory, Maintenance Windows)
+- VPC IPAM, Transit Gateway, Network Firewall
+- EC2 Image Builder, Service Catalog
+- AWS Cost Explorer, AWS Budgets, License Manager
+- AWS Health, Amazon Macie
+
+## Contributing
+
+When adding or modifying questions:
+
+1. Follow the existing JSON structure and naming conventions (`<pillar>_q<number>`)
+2. Each choice must include a `helpfulResource` with a `displayText` (and optionally a `url`) and an `improvementPlan`
+3. Risk rules should use only `NO_RISK`, `MEDIUM_RISK`, and `HIGH_RISK` levels
+4. Always include a `default` condition as the last risk rule for catch-all coverage
+5. Run `check_urls.sh` after adding new URLs to verify they are valid
+6. Validate the JSON syntax before committing (e.g., `python3 -m json.tool Custom_lens_Landingzone.json`)
