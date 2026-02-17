@@ -192,11 +192,7 @@
                             "risk": "NO_RISK"
                         },
                         {
-                            "condition": "tag_policy_defined && tag_enforcement && !tag_automation",
-                            "risk": "MEDIUM_RISK"
-                        },
-                        {
-                            "condition": "tag_policy_defined && !tag_enforcement",
+                            "condition": "(tag_policy_defined && tag_enforcement && !tag_automation) || (tag_policy_defined && !tag_enforcement)",
                             "risk": "MEDIUM_RISK"
                         },
                         {
@@ -261,11 +257,7 @@
                             "risk": "NO_RISK"
                         },
                         {
-                            "condition": "patch_baseline && patch_automation && patch_compliance_reporting && !patch_remediation",
-                            "risk": "MEDIUM_RISK"
-                        },
-                        {
-                            "condition": "patch_baseline && !patch_automation",
+                            "condition": "(patch_baseline && patch_automation && patch_compliance_reporting && !patch_remediation) || (patch_baseline && !patch_automation)",
                             "risk": "MEDIUM_RISK"
                         },
                         {
@@ -330,11 +322,7 @@
                             "risk": "NO_RISK"
                         },
                         {
-                            "condition": "service_catalog_portfolios && service_catalog_sharing && !service_catalog_constraints",
-                            "risk": "MEDIUM_RISK"
-                        },
-                        {
-                            "condition": "service_catalog_portfolios && !service_catalog_sharing",
+                            "condition": "(service_catalog_portfolios && service_catalog_sharing && !service_catalog_constraints) || (service_catalog_portfolios && !service_catalog_sharing)",
                             "risk": "MEDIUM_RISK"
                         },
                         {
@@ -399,11 +387,7 @@
                             "risk": "NO_RISK"
                         },
                         {
-                            "condition": "backup_policy_org && backup_centralized && backup_compliance_monitoring && !backup_testing",
-                            "risk": "MEDIUM_RISK"
-                        },
-                        {
-                            "condition": "backup_policy_org && !backup_centralized",
+                            "condition": "(backup_policy_org && backup_centralized && backup_compliance_monitoring && !backup_testing) || (backup_policy_org && !backup_centralized)",
                             "risk": "MEDIUM_RISK"
                         },
                         {
@@ -468,11 +452,7 @@
                             "risk": "NO_RISK"
                         },
                         {
-                            "condition": "config_all_accounts && config_aggregator && !config_advanced_queries",
-                            "risk": "MEDIUM_RISK"
-                        },
-                        {
-                            "condition": "config_all_accounts && !config_aggregator",
+                            "condition": "(config_all_accounts && config_aggregator && !config_advanced_queries) || (config_all_accounts && !config_aggregator)",
                             "risk": "MEDIUM_RISK"
                         },
                         {
@@ -537,11 +517,7 @@
                             "risk": "NO_RISK"
                         },
                         {
-                            "condition": "health_org_view && health_eventbridge && !health_dashboard",
-                            "risk": "MEDIUM_RISK"
-                        },
-                        {
-                            "condition": "health_org_view && !health_eventbridge",
+                            "condition": "(health_org_view && health_eventbridge && !health_dashboard) || (health_org_view && !health_eventbridge)",
                             "risk": "MEDIUM_RISK"
                         },
                         {
@@ -606,11 +582,7 @@
                             "risk": "NO_RISK"
                         },
                         {
-                            "condition": "alternate_contacts_defined && alternate_contacts_automated && !alternate_contacts_compliance",
-                            "risk": "MEDIUM_RISK"
-                        },
-                        {
-                            "condition": "alternate_contacts_defined && !alternate_contacts_automated",
+                            "condition": "(alternate_contacts_defined && alternate_contacts_automated && !alternate_contacts_compliance) || (alternate_contacts_defined && !alternate_contacts_automated)",
                             "risk": "MEDIUM_RISK"
                         },
                         {
@@ -724,16 +696,8 @@
                             "risk": "NO_RISK"
                         },
                         {
-                            "condition": "centralized_sso_federation && !iam_governance",
+                            "condition": "(centralized_sso_federation && !iam_governance) || (per_account_federation && !centralized_sso_federation)",
                             "risk": "MEDIUM_RISK"
-                        },
-                        {
-                            "condition": "per_account_federation && !centralized_sso_federation",
-                            "risk": "MEDIUM_RISK"
-                        },
-                        {
-                            "condition": "native_iam_users && !per_account_federation && !centralized_sso_federation",
-                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
@@ -858,8 +822,7 @@
                             "id": "data_classification_schema",
                             "title": "Implement a data classification schema",
                             "helpfulResource": {
-                                "displayText": "Learn about AWS data classification best practices",
-                                "url": "https://aws.amazon.com/blogs/security/data-classification-techniques-using-aws/"
+                                "displayText": "Learn about AWS data classification best practices"
                             },
                             "improvementPlan": {
                                 "displayText": "Develop and implement a clear data classification schema that includes categories such as PII, Customer Data, Intellectual Property (IP), and Non-Classified Data. Document this schema and ensure it's communicated across the organization."
@@ -1100,16 +1063,8 @@
                             "risk": "NO_RISK"
                         },
                         {
-                            "condition": "cloudtrail_centralized && !cloudtrail_full_coverage",
+                            "condition": "(cloudtrail_centralized && !cloudtrail_full_coverage) || (cloudtrail_partial_coverage && !cloudtrail_centralized && !cloudtrail_full_coverage)",
                             "risk": "MEDIUM_RISK"
-                        },
-                        {
-                            "condition": "cloudtrail_partial_coverage && !cloudtrail_centralized && !cloudtrail_full_coverage",
-                            "risk": "MEDIUM_RISK"
-                        },
-                        {
-                            "condition": "cloudtrail_single_account && !cloudtrail_centralized && !cloudtrail_full_coverage",
-                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
@@ -1173,11 +1128,7 @@
                             "risk": "NO_RISK"
                         },
                         {
-                            "condition": "golden_ami_pipeline && ami_sharing && ami_enforcement && !ami_lifecycle",
-                            "risk": "MEDIUM_RISK"
-                        },
-                        {
-                            "condition": "golden_ami_pipeline && ami_sharing && !ami_enforcement",
+                            "condition": "(golden_ami_pipeline && ami_sharing && ami_enforcement && !ami_lifecycle) || (golden_ami_pipeline && ami_sharing && !ami_enforcement)",
                             "risk": "MEDIUM_RISK"
                         },
                         {
@@ -1238,11 +1189,7 @@
                     ],
                     "riskRules": [
                         {
-                            "condition": "region_deny_scp && region_compliance_monitoring && region_exception_process",
-                            "risk": "NO_RISK"
-                        },
-                        {
-                            "condition": "region_guardrails && region_compliance_monitoring && region_exception_process",
+                            "condition": "(region_deny_scp && region_compliance_monitoring && region_exception_process) || (region_guardrails && region_compliance_monitoring && region_exception_process)",
                             "risk": "NO_RISK"
                         },
                         {
@@ -1311,11 +1258,7 @@
                             "risk": "NO_RISK"
                         },
                         {
-                            "condition": "guardduty_enabled && securityhub_enabled && vpc_flow_logs_enabled && !baseline_drift_detection",
-                            "risk": "MEDIUM_RISK"
-                        },
-                        {
-                            "condition": "(guardduty_enabled || securityhub_enabled) && !vpc_flow_logs_enabled",
+                            "condition": "(guardduty_enabled && securityhub_enabled && vpc_flow_logs_enabled && !baseline_drift_detection) || ((guardduty_enabled || securityhub_enabled) && !vpc_flow_logs_enabled)",
                             "risk": "MEDIUM_RISK"
                         },
                         {
@@ -1380,11 +1323,7 @@
                             "risk": "NO_RISK"
                         },
                         {
-                            "condition": "default_sg_restricted && sg_compliance_detection && !sg_auto_remediation",
-                            "risk": "MEDIUM_RISK"
-                        },
-                        {
-                            "condition": "default_sg_restricted && !sg_compliance_detection",
+                            "condition": "(default_sg_restricted && sg_compliance_detection && !sg_auto_remediation) || (default_sg_restricted && !sg_compliance_detection)",
                             "risk": "MEDIUM_RISK"
                         },
                         {
@@ -1528,7 +1467,72 @@
                             "risk": "HIGH_RISK"
                         }
                     ]
-                }, { "id": "cost_q3", "title": "How do you centrally manage the procurement and usage of third-party software across your AWS organization?", "description": "Effective management of third-party software procurement, licensing, and usage is crucial for cost control and compliance in a multi-account environment. This question addresses how you centralize and optimize the management of third-party software across your AWS organization.", "choices": [ { "id": "private_marketplace", "title": "Use AWS Private Marketplace for centralized software procurement", "helpfulResource": { "displayText": "Learn about AWS Marketplace Private Marketplace", "url": "https://docs.aws.amazon.com/marketplace/latest/buyerguide/private-marketplace.html" }, "improvementPlan": { "displayText": "Implement AWS Private Marketplace to create a curated list of approved third-party software products. Configure approval workflows to manage and control software purchases across your organization, ensuring compliance with procurement policies and budget constraints." } }, { "id": "license_manager", "title": "Implement AWS License Manager for license tracking", "helpfulResource": { "displayText": "Explore AWS License Manager", "url": "https://docs.aws.amazon.com/license-manager/latest/userguide/license-manager.html" }, "improvementPlan": { "displayText": "Deploy AWS License Manager to track and manage software licenses across your AWS organization. Set up license rules and automate license usage tracking to optimize costs and ensure compliance with licensing terms." } }, { "id": "systems_manager_inventory", "title": "Use AWS Systems Manager Inventory for software discovery", "helpfulResource": { "displayText": "Learn about AWS Systems Manager Inventory", "url": "https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-inventory.html" }, "improvementPlan": { "displayText": "Implement AWS Systems Manager Inventory across all accounts in your organization to automatically discover and track installed software on EC2 instances and on-premises servers. Use this data to identify unauthorized or underutilized software and optimize licensing costs." } }, { "id": "cost_optimization", "title": "Implement software cost optimization processes", "helpfulResource": { "displayText": "Explore AWS Cost Optimization", "url": "https://aws.amazon.com/aws-cost-management/aws-cost-optimization/" }, "improvementPlan": { "displayText": "Develop processes to regularly review software usage data from License Manager and Systems Manager Inventory. Use this information to optimize software licenses, remove unused software, and negotiate better terms with vendors based on actual usage patterns." } } ], "riskRules": [ { "condition": "private_marketplace && license_manager && systems_manager_inventory && cost_optimization", "risk": "NO_RISK" }, { "condition": "private_marketplace && license_manager && systems_manager_inventory && !cost_optimization", "risk": "LOW_RISK" }, { "condition": "private_marketplace && (license_manager || systems_manager_inventory) && !cost_optimization", "risk": "MEDIUM_RISK" }, { "condition": "private_marketplace && !license_manager && !systems_manager_inventory", "risk": "HIGH_RISK" }, { "condition": "default", "risk": "HIGH_RISK" } ] }
+                },
+                {
+                    "id": "cost_q3",
+                    "title": "How do you centrally manage the procurement and usage of third-party software across your AWS organization?",
+                    "description": "Effective management of third-party software procurement, licensing, and usage is crucial for cost control and compliance in a multi-account environment. This question addresses how you centralize and optimize the management of third-party software across your AWS organization.",
+                    "choices": [
+                        {
+                            "id": "private_marketplace",
+                            "title": "Use AWS Private Marketplace for centralized software procurement",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Marketplace Private Marketplace",
+                                "url": "https://docs.aws.amazon.com/marketplace/latest/buyerguide/private-marketplace.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement AWS Private Marketplace to create a curated list of approved third-party software products. Configure approval workflows to manage and control software purchases across your organization, ensuring compliance with procurement policies and budget constraints."
+                            }
+                        },
+                        {
+                            "id": "license_manager",
+                            "title": "Implement AWS License Manager for license tracking",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS License Manager",
+                                "url": "https://docs.aws.amazon.com/license-manager/latest/userguide/license-manager.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Deploy AWS License Manager to track and manage software licenses across your AWS organization. Set up license rules and automate license usage tracking to optimize costs and ensure compliance with licensing terms."
+                            }
+                        },
+                        {
+                            "id": "systems_manager_inventory",
+                            "title": "Use AWS Systems Manager Inventory for software discovery",
+                            "helpfulResource": {
+                                "displayText": "Learn about AWS Systems Manager Inventory",
+                                "url": "https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-inventory.html"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Implement AWS Systems Manager Inventory across all accounts in your organization to automatically discover and track installed software on EC2 instances and on-premises servers. Use this data to identify unauthorized or underutilized software and optimize licensing costs."
+                            }
+                        },
+                        {
+                            "id": "cost_optimization",
+                            "title": "Implement software cost optimization processes",
+                            "helpfulResource": {
+                                "displayText": "Explore AWS Cost Optimization",
+                                "url": "https://aws.amazon.com/aws-cost-management/aws-cost-optimization/"
+                            },
+                            "improvementPlan": {
+                                "displayText": "Develop processes to regularly review software usage data from License Manager and Systems Manager Inventory. Use this information to optimize software licenses, remove unused software, and negotiate better terms with vendors based on actual usage patterns."
+                            }
+                        }
+                    ],
+                    "riskRules": [
+                        {
+                            "condition": "private_marketplace && license_manager && systems_manager_inventory && cost_optimization",
+                            "risk": "NO_RISK"
+                        },
+                        {
+                            "condition": "(private_marketplace && license_manager && systems_manager_inventory && !cost_optimization) || (private_marketplace && (license_manager || systems_manager_inventory) && !cost_optimization)",
+                            "risk": "MEDIUM_RISK"
+                        },
+                        {
+                            "condition": "default",
+                            "risk": "HIGH_RISK"
+                        }
+                    ]
+                }
             ]
         },
         {
@@ -1610,7 +1614,7 @@
                             "title": "Automate network connectivity for identified accounts",
                             "helpfulResource": {
                                 "displayText": "Explore AWS Network Manager",
-                                "url": "https://docs.aws.amazon.com/network-manager/latest/tgw/what-is-network-manager.html"
+                                "url": "https://aws.amazon.com/solutions/implementations/network-orchestration-aws-transit-gateway/"
                             },
                             "improvementPlan": {
                                 "displayText": "Implement an automated process using AWS Lambda and AWS Network Manager to detect newly created accounts that require connectivity (based on tags or metadata). Automatically attach these accounts to the appropriate Transit Gateway or Cloud WAN, and configure necessary route tables and security groups."
@@ -1645,16 +1649,8 @@
                             "risk": "NO_RISK"
                         },
                         {
-                            "condition": "selective_connectivity && automated_connectivity && default_isolation && !network_monitoring",
+                            "condition": "(selective_connectivity && automated_connectivity && default_isolation && !network_monitoring) || (selective_connectivity && (automated_connectivity || default_isolation) && !network_monitoring)",
                             "risk": "MEDIUM_RISK"
-                        },
-                        {
-                            "condition": "selective_connectivity && (automated_connectivity || default_isolation) && !network_monitoring",
-                            "risk": "MEDIUM_RISK"
-                        },
-                        {
-                            "condition": "selective_connectivity && !automated_connectivity && !default_isolation",
-                            "risk": "HIGH_RISK"
                         },
                         {
                             "condition": "default",
@@ -1718,11 +1714,7 @@
                             "risk": "NO_RISK"
                         },
                         {
-                            "condition": "aws_ipam && ipam_automated_allocation && !ipam_compliance_monitoring",
-                            "risk": "MEDIUM_RISK"
-                        },
-                        {
-                            "condition": "aws_ipam && !ipam_automated_allocation",
+                            "condition": "(aws_ipam && ipam_automated_allocation && !ipam_compliance_monitoring) || (aws_ipam && !ipam_automated_allocation)",
                             "risk": "MEDIUM_RISK"
                         },
                         {
